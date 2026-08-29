@@ -2,6 +2,7 @@
 from backend.services.aws.iam import scan_iam_users
 from backend.services.aws.ec2 import scan_security_groups
 from backend.services.aws.cloudtrail import scan_cloudtrail
+from backend.services.aws.lambda_scanner import scan_lambda_functions
 
 
 def run_full_scan() -> dict:
@@ -13,6 +14,7 @@ def run_full_scan() -> dict:
         "iam": scan_iam_users,
         "ec2": scan_security_groups,
         "cloudtrail": scan_cloudtrail,
+        "lambda": scan_lambda_functions,
     }
 
     for name, scanner_fn in scanners.items():

@@ -4,6 +4,7 @@ from backend.services.aws.s3 import scan_s3_buckets
 from backend.services.aws.iam import scan_iam_users
 from backend.services.aws.ec2 import scan_security_groups
 from backend.services.aws.cloudtrail import scan_cloudtrail
+from backend.services.aws.lambda_scanner import scan_lambda_functions
 
 app = FastAPI(title="CloudSentinel")
 
@@ -36,3 +37,8 @@ def scan_ec2():
 @app.get("/scan/cloudtrail")
 def scan_ct():
     return {"findings": scan_cloudtrail()}
+
+
+@app.get("/scan/lambda")
+def scan_lambda():
+    return {"findings": scan_lambda_functions()}
