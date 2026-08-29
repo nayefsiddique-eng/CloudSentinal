@@ -1,0 +1,1682 @@
+[
+  {
+    "file": "dataset/vulnerable/s3_0001.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/s3_0002.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/s3_0003.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/s3_0004.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0005.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/s3_0006.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0007.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0008.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0009.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0010.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0011.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0012.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0013.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0014.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0015.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0016.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0017.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0018.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0019.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0020.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/s3_0021.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0022.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/secure/s3_0023.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0024.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0025.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0026.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0027.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0028.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0029.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0030.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0031.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0032.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/s3_0033.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/s3_0034.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0035.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0036.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/secure/s3_0037.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/s3_0038.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/s3_0039.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/s3_0040.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0041.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0042.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0043.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0044.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/secure/s3_0045.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/s3_0046.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0047.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0048.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0049.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0050.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0051.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/secure/s3_0052.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0053.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0054.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0055.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0056.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0057.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0058.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0059.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0060.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0061.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0062.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0063.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0064.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0065.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0066.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0067.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/s3_0068.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/s3_0069.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/s3_0070.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0071.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0072.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0073.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0074.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0075.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0076.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0077.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "PUBLIC_ACCESS",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0078.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/s3_0079.json",
+    "resource_type": "s3_bucket",
+    "label": "MISCONFIGURED",
+    "category": "DATA_PROTECTION",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/secure/s3_0080.json",
+    "resource_type": "s3_bucket",
+    "label": "SECURE",
+    "category": "NONE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0081.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0082.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/iam_0083.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0084.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0085.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/iam_0086.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0087.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0088.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0089.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0090.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/iam_0091.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/iam_0092.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0093.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0094.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "EXCESSIVE_PERMISSIONS",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0095.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0096.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/iam_0097.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0098.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0099.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0100.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0101.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "EXCESSIVE_PERMISSIONS",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0102.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0103.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0104.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0105.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0106.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "EXCESSIVE_PERMISSIONS",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/iam_0107.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/iam_0108.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0109.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "EXCESSIVE_PERMISSIONS",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0110.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "EXCESSIVE_PERMISSIONS",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/iam_0111.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0112.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0113.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0114.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0115.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0116.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0117.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0118.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0119.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0120.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0121.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0122.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0123.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "EXCESSIVE_PERMISSIONS",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0124.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0125.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/secure/iam_0126.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0127.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0128.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0129.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0130.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0131.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0132.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0133.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0134.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0135.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0136.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "EXCESSIVE_PERMISSIONS",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0137.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0138.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "EXCESSIVE_PERMISSIONS",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/iam_0139.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0140.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0141.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0142.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/iam_0143.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0144.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0145.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0146.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0147.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "MEDIUM"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0148.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0149.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0150.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0151.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0152.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0153.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/iam_0154.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0155.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0156.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0157.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/iam_0158.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/iam_0159.json",
+    "resource_type": "iam_user",
+    "label": "SECURE",
+    "category": "CREDENTIAL_HYGIENE",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/iam_0160.json",
+    "resource_type": "iam_user",
+    "label": "MISCONFIGURED",
+    "category": "IDENTITY_SECURITY",
+    "severity": "HIGH"
+  },
+  {
+    "file": "dataset/secure/sg_0161.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0162.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0163.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0164.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0165.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0166.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0167.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0168.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0169.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0170.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0171.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0172.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0173.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0174.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0175.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0176.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0177.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0178.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0179.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0180.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0181.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0182.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0183.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0184.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0185.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0186.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0187.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0188.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0189.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0190.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0191.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0192.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0193.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0194.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0195.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0196.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0197.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0198.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0199.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0200.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0201.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0202.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0203.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0204.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0205.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0206.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0207.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0208.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0209.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0210.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0211.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0212.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0213.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0214.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0215.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0216.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0217.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0218.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0219.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0220.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0221.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0222.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0223.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0224.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0225.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0226.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0227.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0228.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0229.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0230.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0231.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0232.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0233.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/secure/sg_0234.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0235.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0236.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/secure/sg_0237.json",
+    "resource_type": "security_group",
+    "label": "SECURE",
+    "category": "NETWORK_SECURITY",
+    "severity": "INFO"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0238.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0239.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  },
+  {
+    "file": "dataset/vulnerable/sg_0240.json",
+    "resource_type": "security_group",
+    "label": "MISCONFIGURED",
+    "category": "NETWORK_SECURITY",
+    "severity": "CRITICAL"
+  }
+]
