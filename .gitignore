@@ -18,3 +18,7 @@ frontend/build/
 
 .DS_Store
 Thumbs.db
+
+lambda_test_pkg/
+lambda_test.zip
+trust-policy.json
