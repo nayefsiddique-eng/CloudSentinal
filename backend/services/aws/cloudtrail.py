@@ -7,9 +7,9 @@ def list_trails() -> list:
     return response.get("trailList", [])
 
 
-def is_trail_logging(trail_name: str) -> bool:
+def is_trail_logging(trail_arn: str) -> bool:
     ct = get_client("cloudtrail")
-    status = ct.get_trail_status(Name=trail_name)
+    status = ct.get_trail_status(Name=trail_arn)
     return status.get("IsLogging", False)
 
 
@@ -31,7 +31,22 @@ def scan_cloudtrail() -> list:
 
     for trail in trails:
         name = trail["Name"]
-        logging_enabled = is_trail_logging(name)
+        trail_arn = trail.get("TrailARN", name)
+
+        try:
+            logging_enabled = is_trail_logging(trail_arn)
+        except Exception as e:
+            findings.append({
+                "resource_id": name,
+                "resource_type": "cloudtrail",
+                "finding": f"Could not determine logging status: {e}",
+                "severity": "MEDIUM",
+                "category": "LOGGING_MONITORING",
+                "evidence": {"error": str(e)},
+                "status": "OPEN",
+            })
+            continue
+
         findings.append({
             "resource_id": name,
             "resource_type": "cloudtrail",
