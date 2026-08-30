@@ -5,8 +5,11 @@ from backend.services.aws.client import get_client
 
 def list_users() -> list:
     iam = get_client("iam")
-    response = iam.list_users()
-    return [u["UserName"] for u in response.get("Users", [])]
+    users = []
+    paginator = iam.get_paginator("list_users")
+    for page in paginator.paginate():
+        users.extend(u["UserName"] for u in page.get("Users", []))
+    return users
 
 
 def has_mfa_enabled(username: str) -> bool:
