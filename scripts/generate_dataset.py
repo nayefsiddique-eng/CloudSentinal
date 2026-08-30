@@ -53,6 +53,34 @@ def sg_config(ssh_open, rdp_open, unrestricted, idx):
         "severity": "CRITICAL" if (ssh_open or rdp_open or unrestricted) else "INFO",
     }
 
+def cloudtrail_config(logging_enabled, idx):
+    return {
+        "resource_type": "cloudtrail",
+        "resource_id": f"trail-{idx:04d}",
+        "config": {
+            "logging_enabled": logging_enabled,
+        },
+        "label": "MISCONFIGURED" if not logging_enabled else "SECURE",
+        "category": "LOGGING_MONITORING",
+        "severity": "HIGH" if not logging_enabled else "INFO",
+    }
+
+def lambda_config(excessive_perms, public_url, has_secret_env, kms_encrypted, idx):
+    is_bad = excessive_perms or public_url or has_secret_env
+    return {
+        "resource_type": "lambda_function",
+        "resource_id": f"function-{idx:04d}",
+        "config": {
+            "excessive_permissions": excessive_perms,
+            "public_function_url": public_url,
+            "secrets_in_env": has_secret_env,
+            "kms_encrypted": kms_encrypted,
+        },
+        "label": "MISCONFIGURED" if is_bad else "SECURE",
+        "category": "EXCESSIVE_PERMISSIONS" if excessive_perms else ("PUBLIC_ACCESS" if public_url else ("CREDENTIAL_HYGIENE" if has_secret_env else "DATA_PROTECTION")),
+        "severity": "CRITICAL" if excessive_perms else ("HIGH" if (public_url or has_secret_env) else ("LOW" if not kms_encrypted else "INFO")),
+    }
+
 all_labels = []
 idx = 1
 
@@ -87,6 +115,29 @@ for _ in range(80):
     cfg = sg_config(ssh_open, rdp_open, unrestricted, idx)
     folder = "vulnerable" if cfg["label"] == "MISCONFIGURED" else "secure"
     fname = f"dataset/{folder}/sg_{idx:04d}.json"
+    with open(fname, "w") as f:
+        json.dump(cfg, f, indent=2)
+    all_labels.append({"file": fname, **{k: cfg[k] for k in ("resource_type", "label", "category", "severity")}})
+    idx += 1
+
+for _ in range(40):
+    logging_enabled = random.random() > 0.3
+    cfg = cloudtrail_config(logging_enabled, idx)
+    folder = "vulnerable" if cfg["label"] == "MISCONFIGURED" else "secure"
+    fname = f"dataset/{folder}/cloudtrail_{idx:04d}.json"
+    with open(fname, "w") as f:
+        json.dump(cfg, f, indent=2)
+    all_labels.append({"file": fname, **{k: cfg[k] for k in ("resource_type", "label", "category", "severity")}})
+    idx += 1
+
+for _ in range(60):
+    excessive_perms = random.random() < 0.2
+    public_url = random.random() < 0.25
+    has_secret_env = random.random() < 0.2
+    kms_encrypted = random.random() > 0.5
+    cfg = lambda_config(excessive_perms, public_url, has_secret_env, kms_encrypted, idx)
+    folder = "vulnerable" if cfg["label"] == "MISCONFIGURED" else "secure"
+    fname = f"dataset/{folder}/lambda_{idx:04d}.json"
     with open(fname, "w") as f:
         json.dump(cfg, f, indent=2)
     all_labels.append({"file": fname, **{k: cfg[k] for k in ("resource_type", "label", "category", "severity")}})
