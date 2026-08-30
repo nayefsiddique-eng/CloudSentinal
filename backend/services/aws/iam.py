@@ -15,6 +15,34 @@ def has_mfa_enabled(username: str) -> bool:
     return len(response.get("MFADevices", [])) > 0
 
 
+def root_account_has_mfa() -> bool:
+    iam = get_client("iam")
+    summary = iam.get_account_summary()
+    return summary.get("SummaryMap", {}).get("AccountMFAEnabled", 0) == 1
+
+
+def has_weak_password_policy() -> dict:
+    iam = get_client("iam")
+    try:
+        policy = iam.get_account_password_policy().get("PasswordPolicy", {})
+    except iam.exceptions.NoSuchEntityException:
+        return {"weak": True, "reason": "No password policy set"}
+
+    issues = []
+    if policy.get("MinimumPasswordLength", 0) < 14:
+        issues.append("minimum length below 14")
+    if not policy.get("RequireSymbols", False):
+        issues.append("symbols not required")
+    if not policy.get("RequireNumbers", False):
+        issues.append("numbers not required")
+    if not policy.get("RequireUppercaseCharacters", False):
+        issues.append("uppercase not required")
+    if not policy.get("RequireLowercaseCharacters", False):
+        issues.append("lowercase not required")
+
+    return {"weak": len(issues) > 0, "reason": ", ".join(issues) if issues else "policy meets baseline"}
+
+
 def _policy_has_wildcard(policy_document: dict) -> bool:
     statements = policy_document.get("Statement", [])
     if isinstance(statements, dict):
@@ -23,15 +51,12 @@ def _policy_has_wildcard(policy_document: dict) -> bool:
     for statement in statements:
         if statement.get("Effect") != "Allow":
             continue
-
         actions = statement.get("Action", [])
         if isinstance(actions, str):
             actions = [actions]
-
         resources = statement.get("Resource", [])
         if isinstance(resources, str):
             resources = [resources]
-
         if "*" in actions and "*" in resources:
             return True
 
@@ -82,8 +107,30 @@ def get_old_access_keys(username: str, max_age_days: int = 90) -> list:
 
 def scan_iam_users() -> list:
     findings = []
-    users = list_users()
 
+    root_mfa = root_account_has_mfa()
+    findings.append({
+        "resource_id": "root",
+        "resource_type": "iam_account",
+        "finding": "Root account MFA is not enabled" if not root_mfa else "Root account MFA is enabled",
+        "severity": "CRITICAL" if not root_mfa else "INFO",
+        "category": "IDENTITY_SECURITY",
+        "evidence": {"root_mfa_enabled": root_mfa},
+        "status": "OPEN" if not root_mfa else "RESOLVED",
+    })
+
+    pw_policy = has_weak_password_policy()
+    findings.append({
+        "resource_id": "account",
+        "resource_type": "iam_account",
+        "finding": f"Weak password policy ({pw_policy['reason']})" if pw_policy["weak"] else "Password policy meets baseline",
+        "severity": "MEDIUM" if pw_policy["weak"] else "INFO",
+        "category": "IDENTITY_SECURITY",
+        "evidence": pw_policy,
+        "status": "OPEN" if pw_policy["weak"] else "RESOLVED",
+    })
+
+    users = list_users()
     for username in users:
         mfa = has_mfa_enabled(username)
         findings.append({

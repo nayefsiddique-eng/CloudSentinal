@@ -78,6 +78,10 @@ def has_secrets_in_env(function_name: str) -> list:
     return flagged_keys
 
 
+def has_encryption_configured(function_config: dict) -> bool:
+    return bool(function_config.get("KMSKeyArn"))
+
+
 def scan_lambda_functions() -> list:
     findings = []
     functions = list_functions()
@@ -117,6 +121,17 @@ def scan_lambda_functions() -> list:
             "category": "CREDENTIAL_HYGIENE",
             "evidence": {"flagged_keys": secret_keys},
             "status": "OPEN" if secret_keys else "RESOLVED",
+        })
+
+        encrypted = has_encryption_configured(fn)
+        findings.append({
+            "resource_id": name,
+            "resource_type": "lambda_function",
+            "finding": "Environment variables are not encrypted with a customer KMS key" if not encrypted else "Environment variables encrypted with customer KMS key",
+            "severity": "LOW" if not encrypted else "INFO",
+            "category": "DATA_PROTECTION",
+            "evidence": {"kms_encrypted": encrypted},
+            "status": "OPEN" if not encrypted else "RESOLVED",
         })
 
     return findings
