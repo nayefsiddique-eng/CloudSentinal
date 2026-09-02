@@ -54,48 +54,60 @@ def scan_s3_buckets() -> list:
     buckets = list_buckets()
 
     for bucket_name in buckets:
-        block_enabled = get_public_access_block_status(bucket_name)
-        findings.append({
-            "resource_id": bucket_name,
-            "resource_type": "s3_bucket",
-            "finding": "Block Public Access is disabled" if not block_enabled else "Block Public Access is enabled",
-            "severity": "HIGH" if not block_enabled else "INFO",
-            "category": "PUBLIC_ACCESS",
-            "evidence": {"block_public_access_enabled": block_enabled},
-            "status": "OPEN" if not block_enabled else "RESOLVED",
-        })
+        try:
+            block_enabled = get_public_access_block_status(bucket_name)
+            findings.append({
+                "resource_id": bucket_name,
+                "resource_type": "s3_bucket",
+                "finding": "Block Public Access is disabled" if not block_enabled else "Block Public Access is enabled",
+                "severity": "HIGH" if not block_enabled else "INFO",
+                "category": "PUBLIC_ACCESS",
+                "evidence": {"block_public_access_enabled": block_enabled},
+                "status": "OPEN" if not block_enabled else "RESOLVED",
+            })
 
-        public = is_bucket_public(bucket_name)
-        findings.append({
-            "resource_id": bucket_name,
-            "resource_type": "s3_bucket",
-            "finding": "Bucket is publicly accessible" if public else "Bucket is not public",
-            "severity": "HIGH" if public else "INFO",
-            "category": "PUBLIC_ACCESS",
-            "evidence": {"public": public},
-            "status": "OPEN" if public else "RESOLVED",
-        })
+            public = is_bucket_public(bucket_name)
+            findings.append({
+                "resource_id": bucket_name,
+                "resource_type": "s3_bucket",
+                "finding": "Bucket is publicly accessible" if public else "Bucket is not public",
+                "severity": "HIGH" if public else "INFO",
+                "category": "PUBLIC_ACCESS",
+                "evidence": {"public": public},
+                "status": "OPEN" if public else "RESOLVED",
+            })
 
-        versioning = is_versioning_enabled(bucket_name)
-        findings.append({
-            "resource_id": bucket_name,
-            "resource_type": "s3_bucket",
-            "finding": "Versioning is disabled" if not versioning else "Versioning is enabled",
-            "severity": "MEDIUM" if not versioning else "INFO",
-            "category": "DATA_PROTECTION",
-            "evidence": {"versioning_enabled": versioning},
-            "status": "OPEN" if not versioning else "RESOLVED",
-        })
+            versioning = is_versioning_enabled(bucket_name)
+            findings.append({
+                "resource_id": bucket_name,
+                "resource_type": "s3_bucket",
+                "finding": "Versioning is disabled" if not versioning else "Versioning is enabled",
+                "severity": "MEDIUM" if not versioning else "INFO",
+                "category": "DATA_PROTECTION",
+                "evidence": {"versioning_enabled": versioning},
+                "status": "OPEN" if not versioning else "RESOLVED",
+            })
 
-        encrypted = is_encryption_enabled(bucket_name)
-        findings.append({
-            "resource_id": bucket_name,
-            "resource_type": "s3_bucket",
-            "finding": "Encryption is disabled" if not encrypted else "Encryption is enabled",
-            "severity": "MEDIUM" if not encrypted else "INFO",
-            "category": "DATA_PROTECTION",
-            "evidence": {"encryption_enabled": encrypted},
-            "status": "OPEN" if not encrypted else "RESOLVED",
-        })
+            encrypted = is_encryption_enabled(bucket_name)
+            findings.append({
+                "resource_id": bucket_name,
+                "resource_type": "s3_bucket",
+                "finding": "Encryption is disabled" if not encrypted else "Encryption is enabled",
+                "severity": "MEDIUM" if not encrypted else "INFO",
+                "category": "DATA_PROTECTION",
+                "evidence": {"encryption_enabled": encrypted},
+                "status": "OPEN" if not encrypted else "RESOLVED",
+            })
+        except Exception as e:
+            findings.append({
+                "resource_id": bucket_name,
+                "resource_type": "s3_bucket",
+                "finding": f"Scan error: {e}",
+                "severity": "INFO",
+                "category": "SCAN_ERROR",
+                "evidence": {"error": str(e)},
+                "status": "ERROR",
+            })
+            continue
 
     return findings
