@@ -1,4 +1,4 @@
-﻿# Handoff Notes - Detection Module (Nayef)
+# Handoff Notes - Detection Module (Nayef)
 
 ## What is done and working
 
@@ -27,7 +27,7 @@ risk score - that is what the risk engine should turn into a numeric
 0-10 score using severity x exposure x asset criticality x confidence.
 
 Labeled dataset for evaluation is in `dataset/secure/`, `dataset/vulnerable/`,
-and `dataset/labels/ground_truth.json` (240 configs).
+and `dataset/labels/ground_truth.json` (340 configs).
 
 ## What Sireen needs (Platform & Dashboard)
 
