@@ -8,8 +8,10 @@ from backend.services.aws.cloudtrail import scan_cloudtrail
 from backend.services.aws.lambda_scanner import scan_lambda_functions
 from backend.services.aws.remediation import plan_remediation, apply_remediation
 from backend.models import ScanResult, SingleScannerResult
+from backend.services.ai.routes import router as ai_router
 
 app = FastAPI(title="CloudSentinel")
+app.include_router(ai_router)  # Masooma: risk / AI analysis / remediation execution / rollback
 
 
 class RemediationRequest(BaseModel):
