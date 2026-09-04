@@ -1,47 +1,43 @@
-﻿# 🛡️ CloudSentinel
+# ☁️ CloudSentinel
 
 **AI-Powered AWS Cloud Security Scanning & Auto-Remediation Platform**
 
-![Status](https://img.shields.io/badge/status-detection--complete-brightgreen)
-![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![FastAPI](https://img.shields.io/badge/backend-FastAPI-009688)
-![AWS](https://img.shields.io/badge/cloud-AWS-orange)
-![Tests](https://img.shields.io/badge/tests-25%20passing-brightgreen)
-![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
-
-**Team CyberSentinel:** Nayef - Masooma - Sireen
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
+[![AWS](https://img.shields.io/badge/cloud-AWS-orange.svg)](https://aws.amazon.com/)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
 
 ---
 
-## Overview
+## 📌 Overview
 
-CloudSentinel continuously discovers AWS resources, detects security misconfigurations, scores risk, and (in later phases) uses AI to explain findings and safely auto-remediate them, with a human approval gate for anything with real blast radius.
+**CloudSentinel** continuously discovers AWS cloud resources, detects security misconfigurations, calculates risk scores, and utilizes AI to explain security findings while offering automated, safety-gated remediation workflows.
 
-The detection layer is complete: 17 real, verified rules across 5 AWS services, fully tested, documented, and running against a live account.
+The detection core implements **17 security rules** across 5 major AWS services (S3, IAM, EC2, CloudTrail, and Lambda), verified against live AWS environment benchmarks.
 
-## Pipeline
+---
+
+## 🔄 Pipeline & Architecture
 
 ```mermaid
 flowchart LR
-    A[Scan] --> B[Detect]
+    A[Scan AWS] --> B[Detect Misconfigurations]
     B --> C[Score Risk]
-    C --> D[AI Explains]
+    C --> D[AI Explains Finding]
     D --> E[Propose Fix]
     E --> F{Safety Gate}
     F -->|Safe| G[Auto-Apply]
     F -->|Risky| H[Human Approval]
     H --> G
-    G --> I[Re-scan]
-    I --> J[Verify]
+    G --> I[Re-scan & Verify]
 ```
 
-## Architecture
+### System Architecture
 
 ```mermaid
 flowchart TB
     subgraph Client
-        UI[Dashboard / API Consumer]
+        UI[Dashboard / React Frontend]
     end
 
     subgraph Backend["FastAPI Backend"]
@@ -49,7 +45,7 @@ flowchart TB
         SVC[scan_service.py]
     end
 
-    subgraph Scanners["AWS Scanners - 17 rules"]
+    subgraph Scanners["AWS Scanners (17 rules)"]
         S3[S3 Scanner - 4 rules]
         IAM[IAM Scanner - 5 rules]
         EC2[EC2 Scanner - 2 rules]
@@ -57,177 +53,122 @@ flowchart TB
         LAM[Lambda Scanner - 4 rules]
     end
 
-    AWS[(AWS Account)]
+    AWS[(AWS Infrastructure)]
 
     UI --> API --> SVC
-    SVC --> S3 --> AWS
-    SVC --> IAM --> AWS
-    SVC --> EC2 --> AWS
-    SVC --> CT --> AWS
-    SVC --> LAM --> AWS
+    SVC --> S3 & IAM & EC2 & CT & LAM --> AWS
 ```
 
 ---
 
-## Status
+## 🛡️ Security Rules & Coverage
 
-| Module | Status | Details |
-|---|---|---|
-| AWS Connector | Done | Authenticated boto3 session |
-| S3 Scanner | Done | Block Public Access, Public bucket, Versioning, Encryption |
-| IAM Scanner | Done | Root MFA, Password policy, User MFA, Wildcard perms, Old keys |
-| EC2 Scanner | Done | SSH/RDP exposed, Unrestricted inbound |
-| CloudTrail Scanner | Done | Logging disabled (region/ARN-safe) |
-| Lambda Scanner | Done | Excessive perms, Public URL, Secrets in env, Missing KMS encryption |
-| FastAPI Layer | Done | /scan + per-service endpoints, graceful per-scanner error handling |
-| Unit Tests | Done | 25 passing, mocked, full 5-service coverage |
-| Labeled Dataset | Done | 340 configs across all 5 services |
-| CI | Done | GitHub Actions runs tests on every push |
-| Test Lab Scripts | Done | Reusable setup/teardown for demos |
-| Risk Engine | Planned | Owner: Masooma |
-| AI Engine | Planned | Owner: Masooma |
-| Remediation | Planned | Owner: Masooma |
-| Dashboard | Planned | Owner: Sireen |
-
-17 real detection rules, verified true-positive and true-negative against a live AWS account, including root account hygiene fixes and a real CloudTrail trail, not just test resources.
+| Service | Rules Implemented | Key Inspections |
+|---|:---:|---|
+| **S3 Bucket** | 4 rules | Block Public Access, Public bucket detection, Bucket versioning, Encryption at rest |
+| **IAM** | 5 rules | Root account MFA, Password policy compliance, User MFA, Wildcard permissions (`*`), Stale access keys |
+| **EC2** | 2 rules | Unrestricted SSH/RDP exposure (`0.0.0.0/0`), Unrestricted inbound security groups |
+| **CloudTrail** | 1 rule | Logging active status & region-level security coverage |
+| **AWS Lambda** | 4 rules | Excessive function permissions, Public function URLs, Secrets in env variables, Missing KMS encryption |
 
 ---
 
-## Tech Stack
+## 🧰 Tech Stack
 
-| Layer | Choice |
-|---|---|
-| Backend | Python + FastAPI |
-| AWS SDK | boto3 (paginated calls for IAM/EC2) |
-| Testing | pytest + unittest.mock |
-| CI | GitHub Actions |
-| Frontend (planned) | React + Vite |
-| Database (planned) | PostgreSQL |
-| AI Layer (planned) | API-based LLM |
+- **Backend Framework**: Python 3.11+, FastAPI
+- **AWS SDK**: `boto3` (paginated API calls for scale)
+- **Frontend**: React + Vite (Dashboard)
+- **Testing**: `pytest`, `unittest.mock`
+- **Automation / Lab**: PowerShell scripts (`setup_test_lab.ps1`)
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
 
-Clone the repo:
+### 1. Repository Setup
+
+```bash
+# Clone the repository
 git clone https://github.com/nayefsiddique-eng/CloudSentinal.git
 cd CloudSentinal
 
-Virtual environment:
+# Create and activate virtual environment
 python -m venv venv
+# On Windows:
 .\venv\Scripts\Activate.ps1
+# On Linux/macOS:
+source venv/bin/activate
 
-Install dependencies:
+# Install dependencies
 pip install -r requirements.txt
+```
 
-Configure AWS credentials:
-copy .env.example .env
-(then edit .env with your AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY)
+### 2. Environment Configuration
 
-Run:
-uvicorn backend.main:app --reload
+```bash
+cp .env.example .env
+# Edit .env with your AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY credentials
+```
 
-Open http://127.0.0.1:8000/docs for the interactive Swagger UI.
+### 3. Run Backend API
 
-### Running tests
-pytest tests/ -v
-
-### Setting up a demo test lab
-.\scripts\setup_test_lab.ps1
-.\scripts\teardown_test_lab.ps1
-
-### Generating the labeled dataset
-python scripts/generate_dataset.py
+```bash
+uvicorn backend.main:app --reload --port 8000
+```
+*Access interactive API documentation at `http://127.0.0.1:8000/docs`.*
 
 ---
 
-## API Endpoints
+## 🧪 Testing & Utilities
+
+```bash
+# Run unit tests (mocked AWS responses)
+pytest tests/ -v
+
+# Generate synthetic benchmark dataset
+python scripts/generate_dataset.py
+
+# Launch demo test lab environment (PowerShell)
+.\scripts\setup_test_lab.ps1
+.\scripts\teardown_test_lab.ps1
+```
+
+---
+
+## 🌐 API Reference
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | /health | Health check |
-| GET | /scan | Runs all scanners, combined findings + severity summary |
-| GET | /scan/s3 | S3 findings only |
-| GET | /scan/iam | IAM findings only |
-| GET | /scan/ec2 | EC2 security group findings only |
-| GET | /scan/cloudtrail | CloudTrail findings only |
-| GET | /scan/lambda | Lambda findings only |
-
-Example finding:
-{
-  "resource_id": "example-bucket",
-  "resource_type": "s3_bucket",
-  "finding": "Bucket is publicly accessible",
-  "severity": "HIGH",
-  "category": "PUBLIC_ACCESS",
-  "evidence": { "public": true },
-  "status": "OPEN"
-}
-
-/scan response shape:
-{
-  "total_findings": 24,
-  "severity_summary": { "CRITICAL": 1, "HIGH": 2, "MEDIUM": 3, "LOW": 0, "INFO": 18 },
-  "findings": [ ],
-  "errors": [ ]
-}
-
-Severity scale: CRITICAL, HIGH, MEDIUM, LOW, INFO
+| `GET` | `/health` | Service health status |
+| `GET` | `/scan` | Executes full audit across all 5 AWS services |
+| `GET` | `/scan/s3` | Returns S3 bucket misconfigurations |
+| `GET` | `/scan/iam` | Returns IAM account hygiene & policy findings |
+| `GET` | `/scan/ec2` | Returns security group exposure findings |
+| `GET` | `/scan/cloudtrail` | Returns CloudTrail logging compliance status |
+| `GET` | `/scan/lambda` | Returns Lambda security findings |
 
 ---
 
-## Project Structure
+## 📁 Repository Structure
 
+```
 CloudSentinel/
-  .github/workflows/
-    tests.yml                 CI: runs pytest on every push
-  backend/
-    main.py                   FastAPI app and routes
-    services/
-      scan_service.py         Aggregates all scanners
-      aws/
-        client.py             Authenticated boto3 session
-        account.py            Account identity check
-        s3.py                 S3 scanner (4 rules)
-        iam.py                IAM scanner (5 rules)
-        ec2.py                EC2 scanner (2 rules, paginated)
-        cloudtrail.py         CloudTrail scanner (region/ARN-safe)
-        lambda_scanner.py     Lambda scanner (4 rules)
-  dataset/
-    secure/                   Labeled secure configs
-    vulnerable/                Labeled vulnerable configs
-    labels/ground_truth.json
-  scripts/
-    generate_dataset.py       Builds the labeled dataset
-    setup_test_lab.ps1        Creates demo AWS resources
-    teardown_test_lab.ps1     Tears them down
-  tests/
-    test_scanners.py          25 unit tests, all scanners mocked
-  HANDOFF.md                  Notes for Masooma and Sireen
-  .env.example
-  requirements.txt
+├── backend/
+│   ├── main.py               # FastAPI application entrypoint & API routes
+│   └── services/
+│       ├── scan_service.py    # Scanner orchestration & aggregation engine
+│       └── aws/              # Individual service scanning modules
+├── dataset/                  # Labeled secure & vulnerable AWS configurations
+├── frontend/                 # React Dashboard UI
+├── scripts/                  # Synthetic dataset generator & PowerShell lab setup
+├── tests/                    # 25+ unit tests covering scanners & backend
+└── .env.example
+```
 
 ---
 
-## Team Roles
+## 🔒 Security Principles & Governance
 
-| Person | Role | Owns |
-|---|---|---|
-| Nayef | AWS Security and Detection Lead | Resource discovery, security rules, dataset - complete |
-| Masooma | AI and Remediation Lead | Risk scoring, AI analysis, remediation, safety controls, verification |
-| Sireen | Platform and Research Lead | Backend APIs, database, dashboard, testing, evaluation |
-
----
-
-## Security Notes
-
-- The scanner identity (cloudsentinel-dev) is intentionally read-only.
-- A separate admin identity is used only for test-lab setup, never by scanner code.
-- Dangerous remediation actions (e.g. IAM admin changes) will always require manual approval.
-- No high-blast-radius action will ever auto-execute without a safety gate.
-- Root account MFA and a real password policy are enabled on the AWS account used for development.
-- A real CloudTrail trail is active, logging all management events.
-
----
-
-Built for a final-year cybersecurity project - CyberSentinel Team
+- **Read-Only Scanner Privilege**: Scanner authentication tokens utilize minimal read-only IAM policies.
+- **Human-in-the-Loop Safety Gate**: Destructive auto-remediation actions require human confirmation before execution.
+- **Zero Secrets Exfiltration**: Credentials and API keys are stored strictly in local environment variables (`.env`).
