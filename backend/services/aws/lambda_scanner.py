@@ -90,60 +90,48 @@ def scan_lambda_functions() -> list:
         name = fn["FunctionName"]
         role_arn = fn.get("Role", "")
 
-        try:
-            excessive = has_excessive_permissions(role_arn) if role_arn else False
-            findings.append({
-                "resource_id": name,
-                "resource_type": "lambda_function",
-                "finding": "Execution role has excessive permissions" if excessive else "Execution role permissions look scoped",
-                "severity": "CRITICAL" if excessive else "INFO",
-                "category": "EXCESSIVE_PERMISSIONS",
-                "evidence": {"role_arn": role_arn, "excessive": excessive},
-                "status": "OPEN" if excessive else "RESOLVED",
-            })
+        excessive = has_excessive_permissions(role_arn) if role_arn else False
+        findings.append({
+            "resource_id": name,
+            "resource_type": "lambda_function",
+            "finding": "Execution role has excessive permissions" if excessive else "Execution role permissions look scoped",
+            "severity": "CRITICAL" if excessive else "INFO",
+            "category": "EXCESSIVE_PERMISSIONS",
+            "evidence": {"role_arn": role_arn, "excessive": excessive},
+            "status": "OPEN" if excessive else "RESOLVED",
+        })
 
-            public_url = has_public_function_url(name)
-            findings.append({
-                "resource_id": name,
-                "resource_type": "lambda_function",
-                "finding": "Function URL is publicly invokable (no auth)" if public_url else "No public function URL exposure",
-                "severity": "HIGH" if public_url else "INFO",
-                "category": "PUBLIC_ACCESS",
-                "evidence": {"public_url": public_url},
-                "status": "OPEN" if public_url else "RESOLVED",
-            })
+        public_url = has_public_function_url(name)
+        findings.append({
+            "resource_id": name,
+            "resource_type": "lambda_function",
+            "finding": "Function URL is publicly invokable (no auth)" if public_url else "No public function URL exposure",
+            "severity": "HIGH" if public_url else "INFO",
+            "category": "PUBLIC_ACCESS",
+            "evidence": {"public_url": public_url},
+            "status": "OPEN" if public_url else "RESOLVED",
+        })
 
-            secret_keys = has_secrets_in_env(name)
-            findings.append({
-                "resource_id": name,
-                "resource_type": "lambda_function",
-                "finding": f"Possible secrets in environment variables: {secret_keys}" if secret_keys else "No suspicious environment variable names found",
-                "severity": "HIGH" if secret_keys else "INFO",
-                "category": "CREDENTIAL_HYGIENE",
-                "evidence": {"flagged_keys": secret_keys},
-                "status": "OPEN" if secret_keys else "RESOLVED",
-            })
+        secret_keys = has_secrets_in_env(name)
+        findings.append({
+            "resource_id": name,
+            "resource_type": "lambda_function",
+            "finding": f"Possible secrets in environment variables: {secret_keys}" if secret_keys else "No suspicious environment variable names found",
+            "severity": "HIGH" if secret_keys else "INFO",
+            "category": "CREDENTIAL_HYGIENE",
+            "evidence": {"flagged_keys": secret_keys},
+            "status": "OPEN" if secret_keys else "RESOLVED",
+        })
 
-            encrypted = has_encryption_configured(fn)
-            findings.append({
-                "resource_id": name,
-                "resource_type": "lambda_function",
-                "finding": "Environment variables are not encrypted with a customer KMS key" if not encrypted else "Environment variables encrypted with customer KMS key",
-                "severity": "LOW" if not encrypted else "INFO",
-                "category": "DATA_PROTECTION",
-                "evidence": {"kms_encrypted": encrypted},
-                "status": "OPEN" if not encrypted else "RESOLVED",
-            })
-        except Exception as e:
-            findings.append({
-                "resource_id": name,
-                "resource_type": "lambda_function",
-                "finding": f"Scan error: {e}",
-                "severity": "INFO",
-                "category": "SCAN_ERROR",
-                "evidence": {"error": str(e)},
-                "status": "ERROR",
-            })
-            continue
+        encrypted = has_encryption_configured(fn)
+        findings.append({
+            "resource_id": name,
+            "resource_type": "lambda_function",
+            "finding": "Environment variables are not encrypted with a customer KMS key" if not encrypted else "Environment variables encrypted with customer KMS key",
+            "severity": "LOW" if not encrypted else "INFO",
+            "category": "DATA_PROTECTION",
+            "evidence": {"kms_encrypted": encrypted},
+            "status": "OPEN" if not encrypted else "RESOLVED",
+        })
 
     return findings

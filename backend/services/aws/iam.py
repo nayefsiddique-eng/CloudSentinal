@@ -135,49 +135,37 @@ def scan_iam_users() -> list:
 
     users = list_users()
     for username in users:
-        try:
-            mfa = has_mfa_enabled(username)
-            findings.append({
-                "resource_id": username,
-                "resource_type": "iam_user",
-                "finding": "MFA is not enabled" if not mfa else "MFA is enabled",
-                "severity": "HIGH" if not mfa else "INFO",
-                "category": "IDENTITY_SECURITY",
-                "evidence": {"mfa_enabled": mfa},
-                "status": "OPEN" if not mfa else "RESOLVED",
-            })
+        mfa = has_mfa_enabled(username)
+        findings.append({
+            "resource_id": username,
+            "resource_type": "iam_user",
+            "finding": "MFA is not enabled" if not mfa else "MFA is enabled",
+            "severity": "HIGH" if not mfa else "INFO",
+            "category": "IDENTITY_SECURITY",
+            "evidence": {"mfa_enabled": mfa},
+            "status": "OPEN" if not mfa else "RESOLVED",
+        })
 
-            wildcard = has_wildcard_permissions(username)
-            findings.append({
-                "resource_id": username,
-                "resource_type": "iam_user",
-                "finding": "User has wildcard (Action:* Resource:*) permissions" if wildcard else "No wildcard permissions found",
-                "severity": "CRITICAL" if wildcard else "INFO",
-                "category": "EXCESSIVE_PERMISSIONS",
-                "evidence": {"wildcard_permissions": wildcard},
-                "status": "OPEN" if wildcard else "RESOLVED",
-            })
+        wildcard = has_wildcard_permissions(username)
+        findings.append({
+            "resource_id": username,
+            "resource_type": "iam_user",
+            "finding": "User has wildcard (Action:* Resource:*) permissions" if wildcard else "No wildcard permissions found",
+            "severity": "CRITICAL" if wildcard else "INFO",
+            "category": "EXCESSIVE_PERMISSIONS",
+            "evidence": {"wildcard_permissions": wildcard},
+            "status": "OPEN" if wildcard else "RESOLVED",
+        })
 
-            old_keys = get_old_access_keys(username)
-            findings.append({
-                "resource_id": username,
-                "resource_type": "iam_user",
-                "finding": f"{len(old_keys)} access key(s) older than 90 days" if old_keys else "No old access keys",
-                "severity": "MEDIUM" if old_keys else "INFO",
-                "category": "CREDENTIAL_HYGIENE",
-                "evidence": {"old_keys": old_keys},
-                "status": "OPEN" if old_keys else "RESOLVED",
-            })
-        except Exception as e:
-            findings.append({
-                "resource_id": username,
-                "resource_type": "iam_user",
-                "finding": f"Scan error: {e}",
-                "severity": "INFO",
-                "category": "SCAN_ERROR",
-                "evidence": {"error": str(e)},
-                "status": "ERROR",
-            })
-            continue
+        old_keys = get_old_access_keys(username)
+        findings.append({
+            "resource_id": username,
+            "resource_type": "iam_user",
+            "finding": f"{len(old_keys)} access key(s) older than 90 days" if old_keys else "No old access keys",
+            "severity": "MEDIUM" if old_keys else "INFO",
+            "category": "CREDENTIAL_HYGIENE",
+            "evidence": {"old_keys": old_keys},
+            "status": "OPEN" if old_keys else "RESOLVED",
+        })
 
     return findings
