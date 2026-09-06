@@ -13,8 +13,11 @@ from backend.services.aws.iam import scan_iam_users
 from backend.services.aws.ec2 import scan_security_groups
 from backend.services.aws.cloudtrail import scan_cloudtrail
 from backend.services.aws.lambda_scanner import scan_lambda_functions
+from backend.services.aws.remediation import plan_remediation
+from backend.services.ai.routes import router as ai_router
 from backend.database.database import Base, engine
 from backend.database import models
+from backend.models import ScanResult, SingleScannerResult
 
 Base.metadata.create_all(bind=engine)
 
@@ -42,37 +45,63 @@ app.include_router(dashboard.router)
 app.include_router(resources.router)
 app.include_router(audit_logs.router)
 app.include_router(remediation.router)
+app.include_router(ai_router)
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
 
-@app.get("/scan")
+@app.get("/scan", response_model=ScanResult)
 def scan_all():
-    return run_full_scan()
+    result = run_full_scan()
+    for f in result.get("findings", []):
+        f["remediation"] = plan_remediation(f)
+    return result
 
 
-@app.get("/scan/s3")
+def _attach_remediation(findings_list: list) -> list:
+    """Attach finding_id and plan_remediation to each finding from a single-scanner result."""
+    from backend.services.scan_service import _make_finding_id
+    for f in findings_list:
+        if "finding_id" not in f:
+            f["finding_id"] = _make_finding_id(f)
+        f["remediation"] = plan_remediation(f)
+    return findings_list
+
+
+
+@app.get("/scan/s3", response_model=SingleScannerResult)
 def scan_s3():
-    return {"findings": scan_s3_buckets()}
+    findings_list = scan_s3_buckets()
+    _attach_remediation(findings_list)
+    return {"findings": findings_list, "errors": []}
 
 
-@app.get("/scan/iam")
+@app.get("/scan/iam", response_model=SingleScannerResult)
 def scan_iam():
-    return {"findings": scan_iam_users()}
+    findings_list = scan_iam_users()
+    _attach_remediation(findings_list)
+    return {"findings": findings_list, "errors": []}
 
 
-@app.get("/scan/ec2")
+@app.get("/scan/ec2", response_model=SingleScannerResult)
 def scan_ec2():
-    return {"findings": scan_security_groups()}
+    findings_list = scan_security_groups()
+    _attach_remediation(findings_list)
+    return {"findings": findings_list, "errors": []}
 
 
-@app.get("/scan/cloudtrail")
+@app.get("/scan/cloudtrail", response_model=SingleScannerResult)
 def scan_ct():
-    return {"findings": scan_cloudtrail()}
+    findings_list = scan_cloudtrail()
+    _attach_remediation(findings_list)
+    return {"findings": findings_list, "errors": []}
 
 
-@app.get("/scan/lambda")
+@app.get("/scan/lambda", response_model=SingleScannerResult)
 def scan_lambda():
-    return {"findings": scan_lambda_functions()}
+    findings_list = scan_lambda_functions()
+    _attach_remediation(findings_list)
+    return {"findings": findings_list, "errors": []}
+

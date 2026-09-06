@@ -1,8 +1,11 @@
+import json
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from backend.database.database import get_db
 from backend.database.models import Remediation, AuditLog
+from backend.services.ai import executor as ai_executor
 
 
 router = APIRouter(
@@ -50,10 +53,11 @@ def create_remediation(
     return remediation
 
 
-# Approve remediation
+# Approve remediation — calls executor.execute_remediation() on the stored finding
 @router.put("/{remediation_id}/approve")
 def approve_remediation(
     remediation_id: int,
+    approved_by: str = "platform_user",
     db: Session = Depends(get_db)
 ):
 
@@ -69,22 +73,50 @@ def approve_remediation(
             detail="Remediation not found"
         )
 
-    remediation.status = "APPROVED"
-    remediation.approved = True
+    if not remediation.finding_json:
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                "This remediation row has no finding_json — it was created before "
+                "Task 3 wiring. Re-run a scan to create a new row with full finding data."
+            )
+        )
 
-    # Create audit log
+    # Reconstruct the scanner finding dict and call the full executor pipeline
+    finding = json.loads(remediation.finding_json)
+
+    exec_result = ai_executor.execute_remediation(finding, approved_by=approved_by)
+
+    if exec_result.get("executed"):
+        remediation.status = "EXECUTED"
+        remediation.approved = True
+    else:
+        # Safety gate refusal or apply failure — surface reason, keep PENDING
+        remediation.status = "FAILED"
+
+    # Write execution result summary into AuditLog
     audit_log = AuditLog(
-        action="Remediation approved",
+        action="Remediation approved and executed" if exec_result.get("executed") else "Remediation approval failed",
         resource_type="Remediation",
         resource_id=str(remediation.id),
-        details=f"Remediation '{remediation.title}' was approved."
+        details=json.dumps({
+            "executed": exec_result.get("executed"),
+            "tier": exec_result.get("tier"),
+            "finding_status": exec_result.get("finding_status"),
+            "verification": exec_result.get("verification"),
+            "reason": exec_result.get("reason"),
+        })
     )
 
     db.add(audit_log)
     db.commit()
     db.refresh(remediation)
 
-    return remediation
+    return {
+        "remediation_id": remediation.id,
+        "status": remediation.status,
+        **exec_result,
+    }
 
 
 # Reject remediation

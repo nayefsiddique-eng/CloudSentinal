@@ -1,3 +1,5 @@
+import json
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -6,6 +8,7 @@ from backend.database.models import Scan, Finding, AuditLog, Remediation
 from backend.schemas import ScanCreate, ScanResponse
 from backend.services.scan_service import run_full_scan
 from backend.services.resource_service import sync_resources
+from backend.services.aws.remediation import plan_remediation
 
 
 router = APIRouter(
@@ -40,15 +43,22 @@ def run_scan(db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_scan)
 
+    # Attach remediation plan to every finding before persisting or returning
+    for f in result.get("findings", []):
+        f["remediation"] = plan_remediation(f)
+
     # Save findings and automatically create remediation tasks
     for finding in result.get("findings", []):
 
+        # Scanner returns: resource_id, resource_type, finding, severity, category, evidence, status
+        # Map to ORM fields: title←finding text, description←"category: evidence summary"
+        evidence_str = json.dumps(finding.get("evidence", {}))
         new_finding = Finding(
-            title=finding.get("title", "Unknown Finding"),
-            description=finding.get("description"),
+            title=finding.get("finding", "Unknown Finding"),
+            description=f"{finding.get('category', '')} | {evidence_str}",
             severity=finding.get("severity", "INFO"),
             status="open",
-            recommendation=finding.get("recommendation"),
+            recommendation=finding.get("remediation", {}).get("description"),
             scan_id=new_scan.id
         )
 
@@ -59,16 +69,24 @@ def run_scan(db: Session = Depends(get_db)):
         # Automatically create remediation for important findings
         if finding.get("severity") in ["CRITICAL", "HIGH", "MEDIUM"]:
 
+            # Store full scanner dict so approve_remediation() can call executor
+            finding_snapshot = {k: finding.get(k) for k in [
+                "resource_id", "resource_type", "finding", "severity",
+                "category", "evidence", "status", "finding_id"
+            ]}
+
             remediation = Remediation(
-                title=f"Remediate: {finding.get('title', 'Security Issue')}",
-                description=finding.get("description"),
-                recommendation=finding.get("recommendation"),
+                title=f"Remediate: {finding.get('finding', 'Security Issue')}",
+                description=f"{finding.get('category', '')} | {evidence_str}",
+                recommendation=finding.get("remediation", {}).get("description"),
                 finding_id=new_finding.id,
+                finding_json=json.dumps(finding_snapshot),
                 status="PENDING",
                 approved=False
             )
 
             db.add(remediation)
+
 
     # Save all remediation tasks
     db.commit()

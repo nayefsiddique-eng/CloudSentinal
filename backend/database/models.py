@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from datetime import datetime
@@ -179,6 +179,11 @@ class Remediation(Base):
     description = Column(String, nullable=True)
 
     recommendation = Column(String, nullable=True)
+
+    # Stores the full scanner finding dict as JSON so approve_remediation()
+    # can call executor.execute_remediation(json.loads(finding_json)) without
+    # needing to re-run a scan.  Set at Remediation creation time in scans.py.
+    finding_json = Column(Text, nullable=True)
 
     status = Column(
         String,
