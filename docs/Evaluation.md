@@ -34,16 +34,16 @@ The project's scanning foundation covers 17 detection rules across S3, IAM, EC2,
 
 ### 2.2 AI-Only Analysis
 
-The AI-only approach analyzes security-related information and determines whether a configuration represents a potential security threat.
+The AI-only approach analyzes security-related information using the integrated AI Analysis Engine (`backend/services/ai/ai_engine.py` and `groq_client.py`).
 
-The AI component is intended to provide:
+The AI component provides:
 
-* Plain-English explanation
-* Security impact
-* Attack scenario
-* Recommended remediation
+* Plain-English explanation of security findings
+* Security impact and potential threat context
+* Concrete attack scenario illustration
+* Actionable remediation recommendations
 
-The AI analysis engine is part of the planned AI/remediation module. 
+The AI engine uses the Groq LLM API (`llama-3.3-70b`) with an automatic, deterministic template fallback mechanism if `GROQ_API_KEY` is not set.
 
 ---
 
@@ -54,16 +54,49 @@ The full CloudSentinel approach combines:
 ```text
 Rule-Based Detection
         +
-AI-Assisted Analysis
+Risk Scoring Engine (severity_weight × exposure × criticality × confidence)
+        +
+3-Tier Safety Gate (AUTO_ALLOWED / APPROVAL_REQUIRED / NEVER_AUTO)
+        +
+AI-Assisted Contextual Analysis
         ↓
-Hybrid CloudSentinel
+Hybrid CloudSentinel Pipeline
 ```
 
-The hybrid architecture aims to combine deterministic detection rules with AI-generated contextual analysis.
+The hybrid architecture combines deterministic detection rules, dynamic risk scoring, safety-gated execution, and AI-generated contextual analysis.
 
 ---
 
-# 3. Evaluation Metrics
+# 3. Implemented AI & Remediation Architecture
+
+### 3.1 Risk Scoring Formula
+Risk score is dynamically calculated for each finding using the formula:
+
+$$\text{Risk Score} = \text{Severity Weight} \times \text{Exposure Multiplier} \times \text{Asset Criticality} \times \text{Confidence}$$
+
+- **Severity Weight**: CRITICAL (10), HIGH (7), MEDIUM (4), LOW (1), INFO (0)
+- **Exposure Multiplier**: Public (2.0), Internal (1.0)
+- **Asset Criticality**: Root/Admin (1.5), Production (1.2), Standard (1.0)
+- **Confidence**: High (1.0), Medium (0.8), Low (0.5)
+
+### 3.2 3-Tier Safety Gate
+Every finding is classified before remediation execution:
+1. `AUTO_ALLOWED`: Purely additive, low-risk, reversible fixes (e.g. enabling S3 block public access, versioning, default encryption).
+2. `APPROVAL_REQUIRED`: Reversible fixes that could impact active workloads (e.g. ACL resets, deactivating 90+ day access keys).
+3. `NEVER_AUTO`: Identity/access changes with potential lock-out risk (e.g. MFA enforcement, root account changes, wildcard permission removal).
+
+### 3.3 Backup, Verification, and Rollback Loop
+The remediation execution pipeline (`backend/services/ai/executor.py`) follows a robust 5-step loop:
+1. **Safety Gate Verification**: Ensures tier permission and human approval if required.
+2. **State Backup**: Pre-remediation configuration snapshot is stored.
+3. **Fix Application**: Executes the remediation handler (`apply_remediation()`).
+4. **Post-Fix Verification**: Re-runs specific control checks to confirm resolution.
+5. **Automatic Rollback & Audit**: Restores previous snapshot automatically if verification fails; logs audit trail.
+
+---
+
+# 4. Evaluation Metrics
+
 
 The following metrics are used.
 
