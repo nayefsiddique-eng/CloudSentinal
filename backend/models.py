@@ -39,6 +39,13 @@ class Finding(BaseModel):
     evidence: dict
     status: Status
     remediation: Optional[RemediationPlan] = None
+    # AI Analysis fields
+    risk_score: Optional[float] = None
+    explanation: Optional[str] = None
+    impact: Optional[str] = None
+    attack_scenario: Optional[str] = None
+    recommendation: Optional[str] = None
+    confidence: Optional[float] = None
 
 
 class ScanError(BaseModel):

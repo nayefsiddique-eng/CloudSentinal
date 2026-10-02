@@ -49,6 +49,15 @@ def run_scan(db: Session = Depends(get_db)):
             severity=finding.get("severity", "INFO"),
             status="open",
             recommendation=finding.get("recommendation"),
+            # AI Analysis fields
+            explanation=finding.get("explanation"),
+            impact=finding.get("impact"),
+            attack_scenario=finding.get("attack_scenario"),
+            confidence=str(finding.get("confidence")) if finding.get("confidence") is not None else None,
+            # Risk assessment fields
+            risk_score=str(finding.get("risk_score")) if finding.get("risk_score") is not None else None,
+            risk_level=finding.get("risk_level"),
+            priority=finding.get("priority"),
             scan_id=new_scan.id
         )
 
