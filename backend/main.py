@@ -38,6 +38,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from backend.auth import auth_router
+
+app.include_router(auth_router)
 app.include_router(scans.router)
 app.include_router(findings.router)
 app.include_router(security_score.router)

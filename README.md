@@ -107,45 +107,80 @@ pip install -r requirements.txt
 
 ```bash
 cp .env.example .env
-# Edit .env with your AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY credentials
+# Configure database URL (optional for PostgreSQL; default SQLite), AWS keys, and session parameters
 ```
 
 ### 3. Run Backend API
 
 ```bash
+# Start the FastAPI server (single-instance model for in-memory session store)
 uvicorn backend.main:app --reload --port 8000
 ```
 *Access interactive API documentation at `http://127.0.0.1:8000/docs`.*
 
----
-
-## 🧪 Testing & Utilities
+### 4. Run Frontend Dashboard
 
 ```bash
-# Run unit tests (mocked AWS responses)
+cd frontend
+npm install
+npm run dev
+```
+
+---
+
+## 🔐 Authentication & Session Security Architecture
+
+CloudSentinel implements a defensible dual-path authentication model:
+
+1. **Browser UI Path (Zero Browser Secrets)**:
+   - Operators authenticate via `POST /auth/login`.
+   - Credentials verified in constant-time using PBKDF2-HMAC-SHA256 (100,000 iterations).
+   - Rate limiting: 5 failed attempts per IP within 5 minutes triggers a 15-minute lockout (HTTP 429).
+   - Issues cryptographically secure `HttpOnly`, `SameSite=Lax` session cookie (`cloudsentinel_session`).
+   - Issues Double-Submit CSRF cookie (`cloudsentinel_csrf`), mirrored into `X-CSRF-Token` header for state-modifying requests (`POST`, `PUT`, `DELETE`).
+   - Session fixation protection: pre-existing sessions invalidated on login.
+   - **Deployment Model**: The in-memory session store operates in a **single-instance deployment model**. Multi-instance horizontal scaling requires Redis or an external OIDC/OAuth2 Identity Provider (AWS Cognito, Okta).
+
+2. **Server-to-Server (S2S) Path**:
+   - Automated runners and CI/CD pipelines supply the `X-API-Key` header.
+   - Verified via constant-time comparison (`secrets.compare_digest`).
+   - Production startup check: refuses to start in `ENVIRONMENT=production` if `CLOUDSENTINEL_API_KEY` is missing or < 16 characters.
+
+---
+
+## 🧪 Testing & Verification
+
+```bash
+# Run complete test suite (mocked AWS responses & adversarial auth tests)
+$env:PYTHONPATH="."
 pytest tests/ -v
 
-# Generate synthetic benchmark dataset
-python scripts/generate_dataset.py
-
-# Launch demo test lab environment (PowerShell)
-.\scripts\setup_test_lab.ps1
-.\scripts\teardown_test_lab.ps1
+# Run production frontend build
+cd frontend
+npm run build
 ```
 
 ---
 
 ## 🌐 API Reference
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/health` | Service health status |
-| `GET` | `/scan` | Executes full audit across all 5 AWS services |
-| `GET` | `/scan/s3` | Returns S3 bucket misconfigurations |
-| `GET` | `/scan/iam` | Returns IAM account hygiene & policy findings |
-| `GET` | `/scan/ec2` | Returns security group exposure findings |
-| `GET` | `/scan/cloudtrail` | Returns CloudTrail logging compliance status |
-| `GET` | `/scan/lambda` | Returns Lambda security findings |
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|:---:|
+| `GET` | `/health` | Service health status | No |
+| `POST` | `/auth/login` | Authenticate operator & set session cookies | No |
+| `POST` | `/auth/logout` | Invalidate session & clear cookies | Yes |
+| `GET` | `/auth/me` | Current session identity & CSRF token | No |
+| `GET` | `/scan` | Executes full audit across all 5 AWS services | No |
+| `GET` | `/scan/s3` | Returns S3 bucket misconfigurations | No |
+| `GET` | `/scan/iam` | Returns IAM hygiene & policy findings | No |
+| `GET` | `/scan/ec2` | Returns security group exposure findings | No |
+| `GET` | `/scan/cloudtrail` | Returns CloudTrail compliance status | No |
+| `GET` | `/scan/lambda` | Returns Lambda security findings | No |
+| `GET` | `/platform/remediation/` | Enriched remediation tasks & safety tiers | No |
+| `PUT` | `/platform/remediation/{id}/approve` | Approve & execute gated cloud remediation | **Session/API Key + CSRF** |
+| `PUT` | `/platform/remediation/{id}/reject` | Reject cloud remediation task | **Session/API Key + CSRF** |
+| `POST` | `/remediation/apply` | Apply remediation via AI pipeline | **Session/API Key + CSRF** |
+| `POST` | `/remediation/rollback` | Roll back remediation to snapshot | **Session/API Key + CSRF** |
 
 ---
 

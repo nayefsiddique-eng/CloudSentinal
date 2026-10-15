@@ -61,6 +61,7 @@ setuptools==84.0.0
 six==1.17.0
 starlette==1.6.0
 sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
 sympy==1.14.0
 typing-inspection==0.4.4
 typing_extensions==4.16.0

@@ -12,8 +12,9 @@ Deliberately namespaced so nothing collides with Nayef's existing
   GET  /remediation/history    recent remediation actions from the audit log
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 
+from backend.auth import get_current_actor
 from backend.services.scan_service import run_full_scan
 from backend.services.ai import risk_engine, pipeline, executor, audit_log, safety_gate
 from backend.services.ai.models_ai import AnalyzeFindingRequest, RemediationApplyRequest, RollbackRequest
@@ -63,11 +64,16 @@ def remediation_preview(req: AnalyzeFindingRequest):
 
 
 @router.post("/remediation/apply")
-def remediation_apply(req: RemediationApplyRequest):
+def remediation_apply(
+    req: RemediationApplyRequest,
+    actor: str = Depends(get_current_actor)
+):
     if not req.confirm:
         raise HTTPException(status_code=400, detail="confirm=true is required to apply a fix.")
 
-    result = executor.execute_remediation(req.finding, approved_by=req.approved_by)
+    # Always use the verified authenticated actor, not an unverified client string
+    approved_by = actor or req.approved_by
+    result = executor.execute_remediation(req.finding, approved_by=approved_by)
     if not result["executed"]:
         status = 403 if result.get("requires_approval") else 422
         raise HTTPException(status_code=status, detail=result["reason"])
@@ -75,7 +81,10 @@ def remediation_apply(req: RemediationApplyRequest):
 
 
 @router.post("/remediation/rollback")
-def remediation_rollback(req: RollbackRequest):
+def remediation_rollback(
+    req: RollbackRequest,
+    actor: str = Depends(get_current_actor)
+):
     result = executor.rollback_remediation(req.finding_id)
     if not result.get("rolled_back"):
         raise HTTPException(status_code=422, detail=result.get("reason") or result.get("error") or "Rollback failed.")

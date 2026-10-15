@@ -1,4 +1,4 @@
-﻿"""
+"""
 Remediation logic: maps a finding to a plan (plan_remediation) and,
 if the plan is "automatable", carries it out (apply_remediation).
 
@@ -6,11 +6,10 @@ Matching is done on (category, finding text) rather than resource_type
 alone, since one resource_type (e.g. s3_bucket) has several distinct
 finding types that need different fixes.
 
-Safety rule: only reversible, low-blast-radius fixes are "automatable".
-Anything that could lock someone out (deleting a user, revoking a wildcard
-policy, disabling an access key still in active use) is
-"manual_action_required" and is never auto-applied, even with confirm=true --
-main.py's /remediate route enforces this by refusing non-automatable plans.
+Safety rules:
+- Only vetted, reversible, low-blast-radius controls are "automatable".
+- High blast-radius, identity altering, or complex network rules provide
+  explicit, actionable manual guidance and return "manual_action_required".
 """
 
 from backend.services.aws.client import get_client
@@ -105,7 +104,7 @@ def _iam_plan(finding: dict) -> dict:
     if resource_type == "iam_account" and category == "IDENTITY_SECURITY" and "Root account MFA" in text:
         return {
             "kind": "manual_action_required",
-            "description": "Root MFA cannot be enabled programmatically -- sign in as root and add an MFA device in the console.",
+            "description": "Root MFA cannot be enabled programmatically -- sign in as root to AWS Console > Security Credentials and register a physical/virtual MFA device.",
         }
 
     if resource_type == "iam_account" and "Weak password policy" in text:
@@ -118,14 +117,14 @@ def _iam_plan(finding: dict) -> dict:
     if resource_type == "iam_user" and category == "IDENTITY_SECURITY" and "MFA is not enabled" in text:
         return {
             "kind": "manual_action_required",
-            "description": f"MFA must be enrolled by the user '{finding.get('resource_id')}' themselves -- cannot be enabled on their behalf.",
+            "description": f"MFA must be enrolled by user '{finding.get('resource_id')}' in the AWS Management Console; AWS IAM does not permit device enrollment on their behalf.",
         }
 
     if category == "EXCESSIVE_PERMISSIONS" and "wildcard" in text.lower():
         return {
             "kind": "manual_action_required",
-            "description": f"User '{finding.get('resource_id')}' has Action:*/Resource:* permissions. Review before detaching -- auto-removal could break active workloads.",
-            "risk": "High -- detaching a policy in use will break whatever depends on it.",
+            "description": f"User '{finding.get('resource_id')}' has Action:*/Resource:* permissions. Manually review active IAM policies and attach a least-privilege policy matching actual service calls.",
+            "risk": "High -- revoking wildcard permissions programmatically could sever active production workloads.",
         }
 
     if category == "CREDENTIAL_HYGIENE" and "access key" in text.lower():
@@ -178,11 +177,45 @@ def _apply_iam(finding: dict) -> dict:
         return {"applied": False, "error": str(e)}
 
 
+def _ec2_plan(finding: dict) -> dict:
+    sg_id = finding.get("resource_id")
+    text = finding.get("finding", "")
+    return {
+        "kind": "manual_action_required",
+        "description": f"Security group '{sg_id}' allows unrestricted ingress ({text}). Review inbound rules in AWS Console/VPC and restrict CIDR to authorized VPN or bastion IPs (never 0.0.0.0/0).",
+        "risk": "Automated CIDR modification risks locking out administrative access or disconnecting critical services without a known replacement IP."
+    }
+
+
+def _cloudtrail_plan(finding: dict) -> dict:
+    return {
+        "kind": "manual_action_required",
+        "description": "CloudTrail logging is disabled or inactive. In AWS Console > CloudTrail, create a multi-region trail with management events enabled, directing logs to a secure, dedicated S3 bucket with KMS encryption.",
+        "risk": "Automated trail creation requires configuring target bucket policies, KMS keys, and multi-region logging; manual setup guarantees proper logging governance."
+    }
+
+
+def _lambda_plan(finding: dict) -> dict:
+    func = finding.get("resource_id")
+    text = finding.get("finding", "")
+
+    if "function url" in text.lower():
+        return {
+            "kind": "manual_action_required",
+            "description": f"Lambda function '{func}' has an unrestricted public function URL. Review function authentication type in AWS Console > Lambda > Configuration > Function URL and require AWS_IAM authorization.",
+        }
+    if "secrets" in text.lower():
+        return {
+            "kind": "manual_action_required",
+            "description": f"Lambda function '{func}' contains potential plain-text secrets in environment variables. Migrate sensitive credentials to AWS Secrets Manager or SSM Parameter Store and retrieve them dynamically via IAM role.",
+        }
+    return {
+        "kind": "manual_action_required",
+        "description": f"Lambda function '{func}' security misconfiguration detected ({text}). Inspect function configuration and apply least-privilege settings.",
+    }
+
+
 def _default_plan(finding: dict) -> dict:
-    """Fallback for resource types without dedicated remediation logic yet
-    (ec2/security_group, cloudtrail, lambda_function). Kept as
-    manual_action_required rather than silently no-op, so these findings
-    still show up as needing attention in the UI."""
     if finding.get("category") == "SCAN_ERROR":
         return {
             "kind": "no_action_needed",
@@ -190,7 +223,7 @@ def _default_plan(finding: dict) -> dict:
         }
     return {
         "kind": "manual_action_required",
-        "description": "Automated remediation for this resource type isn't implemented yet -- please review and fix manually.",
+        "description": "Automated remediation for this resource type is not available -- review finding and resolve manually.",
     }
 
 
@@ -201,6 +234,12 @@ def plan_remediation(finding: dict) -> dict:
         return _s3_plan(finding)
     if resource_type in ("iam_user", "iam_account"):
         return _iam_plan(finding)
+    if resource_type == "security_group":
+        return _ec2_plan(finding)
+    if resource_type == "cloudtrail":
+        return _cloudtrail_plan(finding)
+    if resource_type == "lambda_function":
+        return _lambda_plan(finding)
 
     return _default_plan(finding)
 
@@ -213,4 +252,4 @@ def apply_remediation(finding: dict) -> dict:
     if resource_type in ("iam_user", "iam_account"):
         return _apply_iam(finding)
 
-    return {"applied": False, "reason": "No automated fix defined for this resource type."}
+    return {"applied": False, "reason": f"No automated remediation implemented for {resource_type}."}

@@ -1,24 +1,74 @@
-﻿venv/
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Python Cache & Bytecode
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.pyo
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+
+# Environment Variables & Secrets
 .env
 .env.*
 !.env.example
 
+# Local Databases & Temporary State
+*.db
+*.sqlite
+*.sqlite3
+backend/services/ai/audit_log.jsonl
+scratch/
+
+# Dataset generated artifacts (keep labels/ground_truth.json)
 dataset/secure/*.json
 dataset/vulnerable/*.json
 
+# IDEs & Editors
 .vscode/
 .idea/
-*.log
+*.swp
+*.swo
+*~
 
+# Logs & Temporary Files
+*.log
+*.tmp
+*.bak
+*.backup
+*.old
+*.orig
+*.rej
+
+# Frontend Dependencies & Builds
 node_modules/
 frontend/dist/
 frontend/build/
+frontend/node_modules/
+.eslintcache
+dist/
 
+# OS-generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
+# Test packages & Cloud artifacts
 lambda_test_pkg/
 lambda_test.zip
 trust-policy.json

@@ -16,10 +16,11 @@ can never talk its way into a higher-privilege action.
                       that could lock someone out or break production.
                       Executor refuses unconditionally, always.
 
-We reuse Nayef's `plan_remediation()` (backend/services/aws/remediation.py)
-as the source of truth for *whether a coded fix exists at all* -- this
-module only adds the finer-grained tiering on top of that, per the Team
-Plan's 3-tier model (Nayef's is a simpler 2-tier automatable/manual split).
+Separation of Concerns:
+- Safety Tier: AUTO_ALLOWED, APPROVAL_REQUIRED, NEVER_AUTO
+- Implementation Status: IMPLEMENTED vs NOT_IMPLEMENTED
+- Execution Eligibility: can_execute is True ONLY IF implementation is IMPLEMENTED
+  and tier is not NEVER_AUTO.
 """
 
 from backend.services.aws.remediation import plan_remediation
@@ -28,8 +29,11 @@ AUTO_ALLOWED = "AUTO_ALLOWED"
 APPROVAL_REQUIRED = "APPROVAL_REQUIRED"
 NEVER_AUTO = "NEVER_AUTO"
 
-# Finding-text substrings that are always safe to auto-apply once a coded
-# fix exists -- purely additive controls with no risk of breaking a
+IMPLEMENTED = "IMPLEMENTED"
+NOT_IMPLEMENTED = "NOT_IMPLEMENTED"
+
+# Finding-text substrings that are safe to auto-apply once a coded
+# fix exists -- purely additive controls with minimal risk of breaking a
 # workload (enabling something, never removing/restricting access).
 _AUTO_ALLOWED_MARKERS = (
     "Block Public Access is disabled",
@@ -47,7 +51,7 @@ _APPROVAL_REQUIRED_MARKERS = (
 
 # Never auto-applied, ever, regardless of confirm=true -- identity/access
 # changes with real lock-out or break-everything blast radius, or resource
-# types with no vetted remediation logic yet.
+# types with high risk (e.g., wildcards, MFA).
 _NEVER_AUTO_MARKERS = (
     "Root account MFA",
     "MFA is not enabled",
@@ -57,7 +61,7 @@ _NEVER_AUTO_MARKERS = (
 
 def classify_safety(finding: dict) -> dict:
     """Return {"tier", "reason"} for a finding, independent of whether a
-    coded fix exists yet (that's `plan.kind == "automatable"`)."""
+    coded fix exists yet."""
     text = finding.get("finding", "")
 
     if finding.get("status") != "OPEN" or finding.get("category") == "SCAN_ERROR":
@@ -75,26 +79,26 @@ def classify_safety(finding: dict) -> dict:
         if marker.lower() in text.lower():
             return {"tier": AUTO_ALLOWED, "reason": "Purely additive, reversible control -- safe to auto-apply."}
 
-    # security_group, cloudtrail, lambda_function: no vetted remediation
-    # logic exists in remediation.py yet -- default to requiring approval
-    # rather than silently no-op'ing (matches Nayef's manual_action_required
-    # default), so these still surface for a human decision.
-    return {"tier": APPROVAL_REQUIRED, "reason": "No auto-safe remediation vetted for this finding type yet."}
+    # Fallback: if not identified as auto-allowed or never-auto, mark as approval-required for safety
+    return {"tier": APPROVAL_REQUIRED, "reason": "Requires human review and approval."}
 
 
 def gate(finding: dict) -> dict:
-    """Full gate decision: combines the safety tier with whether Nayef's
-    remediation.py actually has a coded fix for this finding. `can_execute`
-    is only True when both agree."""
+    """Full gate decision: combines the safety tier with whether a real,
+    reviewed remediation implementation exists for this finding."""
     plan = plan_remediation(finding)
     safety = classify_safety(finding)
 
-    has_coded_fix = plan["kind"] == "automatable"
-    can_execute = has_coded_fix and safety["tier"] in (AUTO_ALLOWED, APPROVAL_REQUIRED)
+    has_coded_fix = plan.get("kind") == "automatable"
+    impl_status = IMPLEMENTED if has_coded_fix else NOT_IMPLEMENTED
+
+    # Execution is strictly prohibited if NEVER_AUTO or if no implementation exists
+    can_execute = (impl_status == IMPLEMENTED) and (safety["tier"] in (AUTO_ALLOWED, APPROVAL_REQUIRED))
 
     return {
         "tier": safety["tier"],
         "reason": safety["reason"],
+        "implementation_status": impl_status,
         "has_coded_fix": has_coded_fix,
         "requires_approval": safety["tier"] == APPROVAL_REQUIRED,
         "can_execute": can_execute,
