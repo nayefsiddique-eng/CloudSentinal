@@ -6,6 +6,7 @@
   box-sizing: border-box;
 }
 
+
 body {
   margin: 0;
   font-family:
@@ -14,9 +15,12 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  background: #f6f8fb;
-  color: #172033;
+  background: #0b1120;
+  color: #e2e8f0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
+
 
 button,
 input,
@@ -34,26 +38,38 @@ select {
    Page Header
 ================================ */
 
+
+.page {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 28px 32px;
+  color: #e2e8f0;
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  gap: 20px;
   margin-bottom: 28px;
 }
 
 .page-header h1 {
   margin: 0 0 8px;
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.7px;
+  color: #f8fafc;
 }
 
 .page-header p {
   margin: 0;
-  color: #64748b;
-  font-size: 15px;
+  color: #94a3b8;
+  font-size: 14px;
   line-height: 1.6;
 }
+
 
 /* ================================
    Search / Filters
@@ -409,5 +425,254 @@ select {
   .technical-row strong {
     max-width: 100%;
     text-align: left;
+  }
+}
+
+
+/* ================================
+   CloudSentinel - Dark Dashboard
+================================ */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.stat-card,
+.severity-card,
+.chart-card {
+  background: #131c2e;
+  border: 1px solid #273449;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.stat-card:hover,
+.severity-card:hover,
+.chart-card:hover {
+  border-color: #51458a;
+  transform: translateY(-2px);
+}
+
+.stat-card p {
+  margin: 0 0 16px;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.stat-card h2 {
+  margin: 0 0 10px;
+  color: #f8fafc;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.stat-card span {
+  color: #8493aa;
+  font-size: 12px;
+}
+
+.severity-section,
+.chart-section,
+.findings-section {
+  margin-bottom: 28px;
+}
+
+.severity-section > h2,
+.chart-card h2,
+.section-header h2 {
+  margin: 0 0 18px;
+  color: #f1f5f9;
+  font-size: 18px;
+  font-weight: 650;
+}
+
+.severity-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.severity-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.severity-card span {
+  color: #a7b4c8;
+  font-size: 13px;
+}
+
+.severity-card h2 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 28px;
+}
+
+.severity-card.critical {
+  border-left: 3px solid #fb7185;
+}
+
+.severity-card.high {
+  border-left: 3px solid #fb923c;
+}
+
+.severity-card.medium {
+  border-left: 3px solid #facc15;
+}
+
+.severity-card.low {
+  border-left: 3px solid #22d3a6;
+}
+
+.chart-card h2 {
+  margin-bottom: 8px;
+}
+
+.chart-card > p {
+  margin: 0 0 20px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.chart-container {
+  width: 100%;
+  min-height: 300px;
+}
+
+@media (max-width: 900px) {
+  .stats-grid,
+  .severity-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 20px 16px;
+  }
+
+  .page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .stats-grid,
+  .severity-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* CloudSentinel dashboard refinements */
+
+.stats-grid {
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card,
+.severity-card,
+.chart-card {
+  background: linear-gradient(145deg, #151e31, #111827);
+  border: 1px solid #27354b;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.stat-card {
+  min-width: 0;
+  padding: 22px;
+}
+
+.stat-card:first-child {
+  border-color: #55458b;
+  background: linear-gradient(145deg, #201c3b, #131a2b);
+}
+
+.score-circle {
+  border-color: #22d3ee;
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.08);
+}
+
+.risk-level {
+  color: #c4b5fd;
+}
+
+.scan-btn {
+  background: linear-gradient(135deg, #7c3aed, #0891b2);
+  color: #ffffff;
+  border: 0;
+  border-radius: 10px;
+  padding: 13px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.scan-btn:hover:not(:disabled) {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+.scan-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.severity-card {
+  padding: 20px;
+}
+
+.chart-card {
+  padding: 24px;
+}
+
+.table-container {
+  overflow-x: auto;
+  border: 1px solid #27354b;
+  border-radius: 14px;
+  background: #131c2e;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-container th {
+  padding: 15px 18px;
+  background: #192438;
+  color: #a5b4cc;
+  font-size: 12px;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.table-container td {
+  padding: 16px 18px;
+  color: #d5deeb;
+  font-size: 13px;
+  border-top: 1px solid #263247;
+}
+
+.table-container tbody tr:hover {
+  background: rgba(139, 92, 246, 0.06);
+}
+
+@media (max-width: 600px) {
+  .stat-card,
+  .chart-card {
+    padding: 18px;
+  }
+
+  .scan-btn {
+    width: 100%;
   }
 }
