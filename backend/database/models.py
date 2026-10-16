@@ -59,6 +59,17 @@ class Finding(Base):
 
     recommendation = Column(String, nullable=True)
 
+    # AI Analysis fields
+    explanation = Column(String, nullable=True)
+    impact = Column(String, nullable=True)
+    attack_scenario = Column(String, nullable=True)
+    confidence = Column(String, nullable=True)  # Storing as string for flexibility
+
+    # Risk assessment fields
+    risk_score = Column(String, nullable=True)  # Storing as string for flexibility
+    risk_level = Column(String, nullable=True)
+    priority = Column(String, nullable=True)
+
     scan_id = Column(
         Integer,
         ForeignKey("scans.id"),

@@ -1,0 +1,15 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CloudSentinelReadPermissions",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetBucketLocation",
+        "resource-explorer-2:Search",
+        "tag:GetResources"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
