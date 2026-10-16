@@ -106,7 +106,7 @@ def get_demo_credentials() -> tuple[str, str]:
 
 
 def validate_environment_auth_config():
-    """Validates that production environment cannot run without an API key configured."""
+    """Validates that production environment cannot run without an API key configured or with default/missing demo credentials."""
     key = get_configured_api_key()
     if is_production():
         if not key:
@@ -118,6 +118,12 @@ def validate_environment_auth_config():
             raise RuntimeError(
                 "CRITICAL SECURITY CONFIGURATION ERROR: CLOUDSENTINEL_API_KEY is too short (< 16 chars) "
                 "for production mode."
+            )
+        demo_pwd = os.getenv("DEMO_ADMIN_PASSWORD", "").strip()
+        if not demo_pwd or demo_pwd == "SentinelAdmin2026!":
+            raise RuntimeError(
+                "CRITICAL SECURITY CONFIGURATION ERROR: DEMO_ADMIN_PASSWORD must be explicitly configured "
+                "with a secure non-default password in production. Service refuses to start."
             )
     else:
         if not key:
@@ -229,6 +235,13 @@ def login(creds: LoginRequest, request: Request, response: Response):
     _check_rate_limit(client_ip)
 
     valid_user, valid_raw_pwd = get_demo_credentials()
+
+    if is_production():
+        if not valid_raw_pwd or valid_raw_pwd == "SentinelAdmin2026!":
+            raise HTTPException(
+                status_code=500,
+                detail="Authentication misconfiguration: default demo credentials are prohibited in production."
+            )
 
     # Pre-hash demo password for constant-time PBKDF2 verification
     demo_password_hash = hash_password(valid_raw_pwd)

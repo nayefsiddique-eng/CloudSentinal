@@ -3,6 +3,7 @@ import json
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from backend.auth import get_current_actor
 from backend.database.database import get_db
 from backend.database.models import Scan, Finding, AuditLog, Remediation
 from backend.schemas import ScanCreate, ScanResponse
@@ -19,7 +20,10 @@ router = APIRouter(
 
 # Run a complete AWS security scan
 @router.post("/run")
-def run_scan(db: Session = Depends(get_db)):
+def run_scan(
+    actor: str = Depends(get_current_actor),
+    db: Session = Depends(get_db)
+):
 
     # Run all AWS scanners
     result = run_full_scan()
@@ -115,6 +119,7 @@ def run_scan(db: Session = Depends(get_db)):
 @router.post("/", response_model=ScanResponse)
 def create_scan(
     scan: ScanCreate,
+    actor: str = Depends(get_current_actor),
     db: Session = Depends(get_db)
 ):
     new_scan = Scan(

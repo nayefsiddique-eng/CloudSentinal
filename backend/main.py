@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.routes import scans
@@ -21,21 +22,59 @@ from backend.models import ScanResult, SingleScannerResult
 
 Base.metadata.create_all(bind=engine)
 
+DEFAULT_DEV_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000"
+]
+
+
+def get_allowed_origins() -> list[str]:
+    """
+    Parses and validates allowed frontend origins for CORS.
+    - If ALLOWED_ORIGINS is provided, splits by comma, trims whitespace, and ignores empty entries.
+    - Strictly rejects wildcard '*' when credentials are enabled.
+    - In production (ENVIRONMENT=production/prod), refuses to start or fall back silently if ALLOWED_ORIGINS is missing or empty.
+    - In development/local mode, falls back to standard localhost origins if ALLOWED_ORIGINS is unset.
+    """
+    env_origins = os.getenv("ALLOWED_ORIGINS")
+    is_prod = os.getenv("ENVIRONMENT", "").lower() in ("production", "prod")
+
+    if env_origins is not None:
+        parsed = [o.strip() for o in env_origins.split(",") if o.strip()]
+        if any(o == "*" for o in parsed):
+            raise RuntimeError(
+                "CRITICAL SECURITY CONFIGURATION ERROR: Wildcard '*' origin is prohibited when credentials are enabled."
+            )
+        if not parsed:
+            if is_prod:
+                raise RuntimeError(
+                    "CRITICAL SECURITY CONFIGURATION ERROR: ALLOWED_ORIGINS is empty in production mode. "
+                    "Explicit trusted frontend origin(s) must be configured."
+                )
+            return DEFAULT_DEV_ORIGINS
+        return parsed
+
+    if is_prod:
+        raise RuntimeError(
+            "CRITICAL SECURITY CONFIGURATION ERROR: ALLOWED_ORIGINS must be configured in production mode. "
+            "Silently falling back to localhost is prohibited in production."
+        )
+
+    return DEFAULT_DEV_ORIGINS
+
+
 app = FastAPI(title="CloudSentinel")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "http://localhost:8000",
-        "http://127.0.0.1:8000"
-    ],
+    allow_origins=get_allowed_origins(),
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "X-CSRF-Token", "X-API-Key", "Authorization", "Accept"],
 )
 
 from backend.auth import auth_router

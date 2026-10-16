@@ -12,7 +12,7 @@ os.environ.setdefault("CLOUDSENTINEL_API_KEY", "test-api-key-12345")
 os.environ.setdefault("CLOUDSENTINEL_ACTOR_NAME", "test_operator")
 
 from backend.database.database import Base, check_db_connection, get_db
-from backend.database.models import Remediation, Finding, AuditLog
+from backend.database.models import Remediation, Finding, AuditLog, Scan
 from backend.services.ai import safety_gate, executor
 from backend.services.ai.audit_log import record as audit_record
 from backend.auth import get_current_actor
@@ -494,15 +494,180 @@ def test_production_refuses_startup_without_api_key(monkeypatch):
     import backend.auth as auth_mod
     monkeypatch.setenv("ENVIRONMENT", "production")
     monkeypatch.setenv("CLOUDSENTINEL_API_KEY", "")
-    with pytest.raises(RuntimeError, match="CRITICAL SECURITY CONFIGURATION ERROR"):
+    monkeypatch.setenv("DEMO_ADMIN_PASSWORD", "SuperSecureCustomPass2026!")
+    with pytest.raises(RuntimeError, match="CRITICAL SECURITY CONFIGURATION ERROR: CLOUDSENTINEL_API_KEY is not configured"):
         auth_mod.validate_environment_auth_config()
 
 def test_production_refuses_startup_with_short_key(monkeypatch):
     import backend.auth as auth_mod
     monkeypatch.setenv("ENVIRONMENT", "production")
     monkeypatch.setenv("CLOUDSENTINEL_API_KEY", "short")
+    monkeypatch.setenv("DEMO_ADMIN_PASSWORD", "SuperSecureCustomPass2026!")
     with pytest.raises(RuntimeError, match="too short"):
         auth_mod.validate_environment_auth_config()
+
+def test_production_refuses_startup_with_default_or_missing_demo_password(monkeypatch):
+    import backend.auth as auth_mod
+    monkeypatch.setenv("ENVIRONMENT", "production")
+    monkeypatch.setenv("CLOUDSENTINEL_API_KEY", "valid_length_key_1234567890")
+    # 1. Default password -> raises
+    monkeypatch.setenv("DEMO_ADMIN_PASSWORD", "SentinelAdmin2026!")
+    with pytest.raises(RuntimeError, match="DEMO_ADMIN_PASSWORD must be explicitly configured"):
+        auth_mod.validate_environment_auth_config()
+
+    # 2. Empty password -> raises
+    monkeypatch.setenv("DEMO_ADMIN_PASSWORD", "")
+    with pytest.raises(RuntimeError, match="DEMO_ADMIN_PASSWORD must be explicitly configured"):
+        auth_mod.validate_environment_auth_config()
+
+    # 3. Valid non-default password -> succeeds
+    monkeypatch.setenv("DEMO_ADMIN_PASSWORD", "CustomProductionPass2026!#")
+    auth_mod.validate_environment_auth_config()
+
+def test_scans_endpoints_require_auth(monkeypatch):
+    from backend.auth import get_current_actor
+    original_override = app.dependency_overrides.pop(get_current_actor, None)
+    try:
+        # Check database count before unauthenticated call
+        db = TestingSessionLocal()
+        initial_scan_count = db.query(Scan).count()
+        db.close()
+
+        # Unauthenticated POST /platform/scans/run -> 401
+        res_run = auth_client.post("/platform/scans/run")
+        assert res_run.status_code == 401
+
+        # Confirm NO database record created (no side effects)
+        db = TestingSessionLocal()
+        assert db.query(Scan).count() == initial_scan_count
+        db.close()
+
+        # Unauthenticated POST /platform/scans/ -> 401
+        res_create = auth_client.post("/platform/scans/", json={
+            "scan_type": "manual", "status": "completed",
+            "total_findings": 0, "high_findings": 0, "medium_findings": 0, "low_findings": 0
+        })
+        assert res_create.status_code == 401
+
+        # Authenticated with API key -> 200
+        monkeypatch.setenv("CLOUDSENTINEL_API_KEY", "valid_test_api_key_123")
+        res_create_auth = auth_client.post(
+            "/platform/scans/",
+            json={
+                "scan_type": "manual", "status": "completed",
+                "total_findings": 0, "high_findings": 0, "medium_findings": 0, "low_findings": 0
+            },
+            headers={"X-API-Key": "valid_test_api_key_123"}
+        )
+        assert res_create_auth.status_code == 200
+        assert res_create_auth.json()["scan_type"] == "manual"
+    finally:
+        if original_override:
+            app.dependency_overrides[get_current_actor] = original_override
+
+def test_audit_logs_post_requires_auth_and_prevents_spoofing(monkeypatch):
+    from backend.auth import get_current_actor
+    import json
+    original_override = app.dependency_overrides.pop(get_current_actor, None)
+    try:
+        # 1. Unauthenticated POST /platform/audit-logs/ -> 401
+        res = auth_client.post("/platform/audit-logs/", json={"action": "test_unauth"})
+        assert res.status_code == 401
+
+        # 2. Authenticated request with client attempting to spoof actor in details/payload
+        monkeypatch.setenv("CLOUDSENTINEL_API_KEY", "valid_test_api_key_123")
+        monkeypatch.setenv("CLOUDSENTINEL_ACTOR_NAME", "real_audited_operator")
+        res_auth = auth_client.post(
+            "/platform/audit-logs/",
+            json={
+                "action": "Security scan completed",
+                "resource_type": "AWS Infrastructure",
+                "resource_id": "123",
+                "details": "actor=root_admin spoofed_timestamp=2020-01-01"
+            },
+            headers={"X-API-Key": "valid_test_api_key_123"}
+        )
+        assert res_auth.status_code == 200
+        data = res_auth.json()
+        # Server must enforce real authenticated actor, not user-spoofed identity
+        assert "[real_audited_operator]" in data["action"]
+        # Structured details must contain server-verified actor field
+        parsed_details = json.loads(data["details"])
+        assert parsed_details["actor"] == "real_audited_operator"
+        assert parsed_details["source"] == "api_manual_entry"
+        assert "actor=root_admin" in parsed_details["user_details"]
+    finally:
+        if original_override:
+            app.dependency_overrides[get_current_actor] = original_override
+
+def test_production_mode_login_rejects_default_credentials(monkeypatch):
+    from backend.auth import get_current_actor
+    original_override = app.dependency_overrides.pop(get_current_actor, None)
+    monkeypatch.setenv("ENVIRONMENT", "production")
+    monkeypatch.setenv("CLOUDSENTINEL_API_KEY", "valid_production_key_1234567")
+    monkeypatch.setenv("DEMO_ADMIN_PASSWORD", "SentinelAdmin2026!")
+    try:
+        res = auth_client.post("/auth/login", json={"username": "admin", "password": "SentinelAdmin2026!"})
+        assert res.status_code == 500
+        assert "Authentication misconfiguration" in res.json()["detail"]
+    finally:
+        if original_override:
+            app.dependency_overrides[get_current_actor] = original_override
+
+def test_cors_configuration():
+    # Pre-flight OPTIONS request from allowed origin
+    res = auth_client.options(
+        "/platform/remediation/",
+        headers={
+            "Origin": "http://localhost:5173",
+            "Access-Control-Request-Method": "PUT",
+            "Access-Control-Request-Headers": "X-CSRF-Token"
+        }
+    )
+    assert res.status_code == 200
+    assert res.headers.get("access-control-allow-origin") == "http://localhost:5173"
+    assert "access-control-allow-credentials" in res.headers
+    assert res.headers["access-control-allow-credentials"] == "true"
+    allow_methods = res.headers.get("access-control-allow-methods", "")
+    assert "PUT" in allow_methods
+    assert "*" not in allow_methods
+
+def test_cors_allowed_origins_parsing_and_security(monkeypatch):
+    from backend.main import get_allowed_origins, DEFAULT_DEV_ORIGINS
+
+    # 1. Development default when ALLOWED_ORIGINS is unset
+    monkeypatch.delenv("ALLOWED_ORIGINS", raising=False)
+    monkeypatch.setenv("ENVIRONMENT", "development")
+    assert get_allowed_origins() == DEFAULT_DEV_ORIGINS
+
+    # 2. Configured valid origins with whitespace and trailing/empty items
+    monkeypatch.setenv("ALLOWED_ORIGINS", " https://app.cloudsentinel.io , https://dashboard.example.com , , ")
+    monkeypatch.setenv("ENVIRONMENT", "production")
+    origins = get_allowed_origins()
+    assert origins == ["https://app.cloudsentinel.io", "https://dashboard.example.com"]
+
+    # 3. Wildcard origin rejection when credentials enabled
+    monkeypatch.setenv("ALLOWED_ORIGINS", "https://app.cloudsentinel.io, *")
+    with pytest.raises(RuntimeError, match=r"Wildcard '\*' origin is prohibited"):
+        get_allowed_origins()
+
+    # 4. Production mode rejects missing ALLOWED_ORIGINS (no silent localhost fallback)
+    monkeypatch.delenv("ALLOWED_ORIGINS", raising=False)
+    monkeypatch.setenv("ENVIRONMENT", "production")
+    with pytest.raises(RuntimeError, match="ALLOWED_ORIGINS must be configured in production"):
+        get_allowed_origins()
+
+    # 5. Production mode rejects empty ALLOWED_ORIGINS string
+    monkeypatch.setenv("ALLOWED_ORIGINS", " , ,  ")
+    monkeypatch.setenv("ENVIRONMENT", "production")
+    with pytest.raises(RuntimeError, match="ALLOWED_ORIGINS is empty in production"):
+        get_allowed_origins()
+
+    # 6. Development empty string falls back safely to default dev origins
+    monkeypatch.setenv("ALLOWED_ORIGINS", " , , ")
+    monkeypatch.setenv("ENVIRONMENT", "development")
+    assert get_allowed_origins() == DEFAULT_DEV_ORIGINS
+
 
 def test_ai_remediation_apply_requires_auth():
     from backend.auth import get_current_actor
