@@ -118,12 +118,26 @@ uvicorn backend.main:app --reload --port 8000
 ```
 *Access interactive API documentation at `http://127.0.0.1:8000/docs`.*
 
-### 4. Run Frontend Dashboard
+### 4. Run Frontend Dashboards (Two Implementations Preserved)
 
+CloudSentinel provides two frontend implementations tailored for different operational contexts:
+
+#### Option A: Unified Hardened Frontend (`frontend/`)
+Features full session management, Double-Submit CSRF integration, remediation safety gates, structured audit badges, and interactive metrics:
 ```bash
 cd frontend
 npm install
 npm run dev
+# Starts at http://localhost:5173
+```
+
+#### Option B: Sireen's Original Frontend (`frontend-sireen/`)
+Preserves Sireen's original layout, styling, and navigation workflows:
+```bash
+cd frontend-sireen
+npm install
+npm run dev
+# Starts at http://localhost:5173 (or next available port)
 ```
 
 ---
@@ -155,8 +169,14 @@ CloudSentinel implements a defensible dual-path authentication model:
 $env:PYTHONPATH="."
 pytest tests/ -v
 
-# Run production frontend build
+# Run production build and linting for Unified Frontend
 cd frontend
+npm run lint
+npm run build
+
+# Run production build and linting for Sireen's Frontend
+cd ../frontend-sireen
+npm run lint
 npm run build
 ```
 
@@ -171,14 +191,13 @@ npm run build
 | `POST` | `/auth/logout` | Invalidate session & clear cookies | Yes |
 | `GET` | `/auth/me` | Current session identity & CSRF token | No |
 | `GET` | `/scan` | Executes full audit across all 5 AWS services | No |
-| `GET` | `/scan/s3` | Returns S3 bucket misconfigurations | No |
-| `GET` | `/scan/iam` | Returns IAM hygiene & policy findings | No |
-| `GET` | `/scan/ec2` | Returns security group exposure findings | No |
-| `GET` | `/scan/cloudtrail` | Returns CloudTrail compliance status | No |
-| `GET` | `/scan/lambda` | Returns Lambda security findings | No |
+| `POST` | `/platform/scans/run` | Triggers a scan, syncs resources, creates remediations | **Session/API Key + CSRF** |
+| `GET` | `/platform/findings/` | Returns all findings ordered by ID | No |
 | `GET` | `/platform/remediation/` | Enriched remediation tasks & safety tiers | No |
 | `PUT` | `/platform/remediation/{id}/approve` | Approve & execute gated cloud remediation | **Session/API Key + CSRF** |
 | `PUT` | `/platform/remediation/{id}/reject` | Reject cloud remediation task | **Session/API Key + CSRF** |
+| `GET` | `/platform/audit-logs/` | Retrieves audit logs with structured actor attribution | No |
+| `POST` | `/platform/audit-logs/` | Manual audit log entry with un-spoofable actor stamping | **Session/API Key + CSRF** |
 | `POST` | `/remediation/apply` | Apply remediation via AI pipeline | **Session/API Key + CSRF** |
 | `POST` | `/remediation/rollback` | Roll back remediation to snapshot | **Session/API Key + CSRF** |
 
@@ -189,15 +208,23 @@ npm run build
 ```
 CloudSentinel/
 ├── backend/
-│   ├── main.py               # FastAPI application entrypoint & API routes
+│   ├── auth.py               # Dual-path authentication & CSRF engine
+│   ├── main.py               # FastAPI entrypoint, middleware, & CORS handling
+│   ├── database/             # SQLAlchemy ORM models, DB init, & SQLite fallback
+│   ├── routes/               # API route modules (scans, findings, remediation, audit_logs)
 │   └── services/
-│       ├── scan_service.py    # Scanner orchestration & aggregation engine
-│       └── aws/              # Individual service scanning modules
+│       ├── scan_service.py   # Scanner orchestration & aggregation engine
+│       ├── resource_service.py # Discovered asset inventory sync
+│       ├── ai/               # AI explanation, risk scoring, backup, & safety gate
+│       └── aws/              # Individual service scanning modules (S3, IAM, EC2, CloudTrail, Lambda)
 ├── dataset/                  # Labeled secure & vulnerable AWS configurations
-├── frontend/                 # React Dashboard UI
+├── frontend/                 # Unified Hardened Frontend (AuthContext, CSRF, safety gates)
+├── frontend-sireen/          # Sireen's Original Frontend (preserved in clean standalone directory)
+├── docs/                     # Architecture, Diagrams, Evaluation, and SRS documentation
+├── evaluation/               # Detection and risk evaluation benchmark scripts & dataset
 ├── scripts/                  # Synthetic dataset generator & PowerShell lab setup
-├── tests/                    # 25+ unit tests covering scanners & backend
-└── .env.example
+├── tests/                    # 72 unit/integration tests covering auth, DB, scanners, & remediation
+└── .env.example              # Sanitized configuration template
 ```
 
 ---

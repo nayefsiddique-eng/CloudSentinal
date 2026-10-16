@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function Findings() {
   const [findings, setFindings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [severityFilter, setSeverityFilter] = useState("ALL");
-
-  useEffect(() => {
-    fetchFindings();
-  }, []);
 
   const fetchFindings = async () => {
     try {
@@ -24,6 +21,10 @@ function Findings() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchFindings();
+  }, []);
 
   const filteredFindings = findings.filter((finding) => {
     const matchesSearch =
@@ -90,6 +91,7 @@ function Findings() {
               <th>Description</th>
               <th>Recommendation</th>
               <th>Status</th>
+              <th>Remediation</th>
             </tr>
           </thead>
 
@@ -105,18 +107,35 @@ function Findings() {
                     </span>
                   </td>
 
-                  <td>{finding.title}</td>
+                  <td><strong>{finding.title}</strong></td>
 
                   <td>{finding.description || "-"}</td>
 
                   <td>{finding.recommendation || "-"}</td>
 
                   <td>{finding.status}</td>
+
+                  <td>
+                    <Link
+                      to="/remediation"
+                      style={{
+                        background: "#0284c7",
+                        color: "white",
+                        padding: "4px 8px",
+                        borderRadius: "4px",
+                        textDecoration: "none",
+                        fontSize: "12px",
+                        display: "inline-block"
+                      }}
+                    >
+                      View Fix ➔
+                    </Link>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="5">No findings match your filters.</td>
+                <td colSpan="6">No findings match your filters.</td>
               </tr>
             )}
           </tbody>

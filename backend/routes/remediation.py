@@ -225,17 +225,20 @@ def approve_remediation(
 
     # Persist audit record in DB
     audit_log = AuditLog(
-        action="Remediation approved and executed" if exec_result.get("executed") else "Remediation approval failed",
+        action=f"[{actor}] " + ("Remediation approved and executed" if exec_result.get("executed") else "Remediation approval failed"),
         resource_type=finding.get("resource_type", "Remediation"),
         resource_id=finding.get("resource_id", str(remediation.id)),
         details=json.dumps({
             "remediation_id": remediation.id,
+            "actor": actor,
             "approved_by": actor,
+            "source": "platform_remediation_executor",
             "executed": exec_result.get("executed"),
             "tier": exec_result.get("tier"),
             "finding_status": exec_result.get("finding_status"),
             "verification": exec_result.get("verification"),
             "reason": exec_result.get("reason"),
+            "user_details": f"Tier {exec_result.get('tier')} execution: {exec_result.get('reason') or ('Resolved' if exec_result.get('executed') else 'Failed')}"
         })
     )
 
@@ -282,13 +285,16 @@ def reject_remediation(
     remediation.approved = False
 
     audit_log = AuditLog(
-        action="Remediation rejected",
+        action=f"[{actor}] Remediation rejected",
         resource_type="Remediation",
         resource_id=str(remediation.id),
         details=json.dumps({
             "remediation_id": remediation.id,
+            "actor": actor,
             "rejected_by": actor,
-            "title": remediation.title
+            "source": "platform_remediation_reviewer",
+            "title": remediation.title,
+            "user_details": f"Remediation #{remediation.id} for '{remediation.title}' rejected by operator."
         })
     )
 

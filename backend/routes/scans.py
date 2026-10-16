@@ -95,12 +95,18 @@ def run_scan(
     # Save all remediation tasks
     db.commit()
 
-    # Create audit log
+    # Create audit log with structured actor attribution
     audit_log = AuditLog(
-        action="Security scan completed",
+        action=f"[{actor}] Security scan completed",
         resource_type="AWS Infrastructure",
         resource_id=str(new_scan.id),
-        details=f"Full AWS security scan completed with {result.get('total_findings', 0)} findings."
+        details=json.dumps({
+            "scan_id": new_scan.id,
+            "actor": actor,
+            "source": "platform_scan_runner",
+            "total_findings": result.get("total_findings", 0),
+            "user_details": f"Full AWS security scan completed with {result.get('total_findings', 0)} findings."
+        })
     )
 
     db.add(audit_log)

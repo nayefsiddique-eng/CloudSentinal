@@ -1,53 +1,24 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 function Remediation() {
+  const { session, setSession, login, logout, checkSession } = useAuth();
   const [remediations, setRemediations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorBanner, setErrorBanner] = useState(null);
   const [successBanner, setSuccessBanner] = useState(null);
   const [actionInProgress, setActionInProgress] = useState(null);
 
-  // Session state (Cookie-based, no API keys exposed)
-  const [session, setSession] = useState({ authenticated: false, username: null, csrf_token: null });
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginForm, setLoginForm] = useState({ username: "", password: "" });
   const [loginInProgress, setLoginInProgress] = useState(false);
-
-  const checkSession = async () => {
-    try {
-      const res = await fetch("http://127.0.0.1:8000/auth/me", {
-        credentials: "include",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setSession(data);
-      }
-    } catch (err) {
-      console.warn("Could not check session status:", err);
-    }
-  };
 
   const handleLogin = async (e) => {
     if (e) e.preventDefault();
     setLoginInProgress(true);
     setErrorBanner(null);
     try {
-      const res = await fetch("http://127.0.0.1:8000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(loginForm),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.detail || "Authentication failed");
-      }
-      setSession({
-        authenticated: true,
-        username: data.username,
-        role: data.role,
-        csrf_token: data.csrf_token,
-      });
+      const data = await login(loginForm.username, loginForm.password);
       setSuccessBanner(`Signed in as ${data.username} (${data.role}). Session established via HttpOnly cookie.`);
       await fetchRemediations();
     } catch (err) {
@@ -59,15 +30,10 @@ function Remediation() {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://127.0.0.1:8000/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      await logout();
+      setSuccessBanner("Successfully logged out. Session destroyed.");
     } catch (err) {
       console.error("Logout error:", err);
-    } finally {
-      setSession({ authenticated: false, username: null, csrf_token: null });
-      setSuccessBanner("Successfully logged out. Session destroyed.");
     }
   };
 
@@ -92,7 +58,7 @@ function Remediation() {
   useEffect(() => {
     checkSession();
     fetchRemediations();
-  }, []);
+  }, [checkSession]);
 
   const handleAction = async (id, action) => {
     setErrorBanner(null);

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 import {
   BarChart,
@@ -10,23 +11,24 @@ import {
 } from "recharts";
 
 function Dashboard() {
+  const { session } = useAuth();
   const [dashboard, setDashboard] = useState(null);
   const [findings, setFindings] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
+  const [scanMessage, setScanMessage] = useState(null);
+  const [scanError, setScanError] = useState(null);
 
   const fetchDashboardData = async () => {
     try {
       const dashboardResponse = await fetch(
-        "http://127.0.0.1:8000/platform/dashboard/"
+        "http://127.0.0.1:8000/platform/dashboard/",
+        { credentials: "include" }
       );
       const dashboardData = await dashboardResponse.json();
 
       const findingsResponse = await fetch(
-        "http://127.0.0.1:8000/platform/findings/"
+        "http://127.0.0.1:8000/platform/findings/",
+        { credentials: "include" }
       );
       const findingsData = await findingsResponse.json();
 
@@ -39,33 +41,51 @@ function Dashboard() {
     }
   };
 
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
   const runSecurityScan = async () => {
-  try {
-    setLoading(true);
+    setScanMessage(null);
+    setScanError(null);
 
-    const response = await fetch(
-      "http://127.0.0.1:8000/platform/scans/run",
-      {
-        method: "POST",
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Scan failed");
+    if (!session.authenticated) {
+      setScanError("Authentication required: Please sign in from the Remediation Center to run security scans.");
+      return;
     }
 
-    await response.json();
+    try {
+      setLoading(true);
 
-    await fetchDashboardData();
+      const headers = { "Content-Type": "application/json" };
+      if (session.csrf_token) {
+        headers["X-CSRF-Token"] = session.csrf_token;
+      }
 
-    alert("Security scan completed successfully!");
-  } catch (error) {
-    console.error("Error running scan:", error);
-    alert("Failed to run security scan");
-  } finally {
-    setLoading(false);
-  }
-};
+      const response = await fetch(
+        "http://127.0.0.1:8000/platform/scans/run",
+        {
+          method: "POST",
+          headers: headers,
+          credentials: "include",
+        }
+      );
+
+      const resData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(resData.detail || "Scan request failed");
+      }
+
+      await fetchDashboardData();
+      setScanMessage(`Scan #${resData.scan_id || ""} completed successfully! Detected ${resData.total_findings || 0} findings.`);
+    } catch (error) {
+      console.error("Error running scan:", error);
+      setScanError(error.message || "Failed to run security scan");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading && !dashboard) {
     return <div className="loading">Loading CloudSentinel Dashboard...</div>;
@@ -106,6 +126,52 @@ function Dashboard() {
           {loading ? "Scanning..." : "Run Security Scan"}
         </button>
       </header>
+
+      {scanError && (
+        <div style={{
+          background: "#7f1d1d",
+          border: "1px solid #ef4444",
+          color: "#fecaca",
+          padding: "12px 16px",
+          borderRadius: "8px",
+          marginBottom: "24px",
+          fontSize: "14px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
+          <div><strong>Error: </strong> {scanError}</div>
+          <button
+            onClick={() => setScanError(null)}
+            style={{ background: "transparent", border: "none", color: "#fecaca", cursor: "pointer", fontWeight: "bold" }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {scanMessage && (
+        <div style={{
+          background: "#064e3b",
+          border: "1px solid #10b981",
+          color: "#d1fae5",
+          padding: "12px 16px",
+          borderRadius: "8px",
+          marginBottom: "24px",
+          fontSize: "14px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
+          <div><strong>Success: </strong> {scanMessage}</div>
+          <button
+            onClick={() => setScanMessage(null)}
+            style={{ background: "transparent", border: "none", color: "#d1fae5", cursor: "pointer", fontWeight: "bold" }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       <section className="stats-grid">
         <div className="stat-card score-card">

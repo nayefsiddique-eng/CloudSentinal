@@ -866,5 +866,82 @@ def test_remediation_status_fails_when_post_fix_verification_fails():
         check_db.close()
 
 
+def test_scan_and_remediation_audit_logs_record_structured_actor(monkeypatch):
+    """Verifies that scan execution and remediation actions write structured audit logs with actor attribution."""
+    import json
+    from backend.auth import get_current_actor
+    from backend.database.models import AuditLog
+
+    original_override = app.dependency_overrides.pop(get_current_actor, None)
+    monkeypatch.setenv("CLOUDSENTINEL_API_KEY", "valid_test_api_key_123")
+    monkeypatch.setenv("CLOUDSENTINEL_ACTOR_NAME", "audit_verified_operator")
+
+    try:
+        # Mock AWS full scan to return 1 sample finding
+        mock_finding = {
+            "finding_id": "s3_enc_test",
+            "resource_id": "test-audit-bucket",
+            "resource_type": "s3_bucket",
+            "finding": "S3 Bucket Default Encryption Disabled",
+            "severity": "HIGH",
+            "category": "DATA_PROTECTION",
+            "evidence": {},
+            "status": "OPEN",
+        }
+        with patch("backend.routes.scans.run_full_scan") as mock_scan, \
+             patch("backend.routes.scans.sync_resources"):
+            mock_scan.return_value = {
+                "total_findings": 1,
+                "severity_summary": {"HIGH": 1, "MEDIUM": 0, "LOW": 0},
+                "findings": [mock_finding]
+            }
+
+            res = auth_client.post(
+                "/platform/scans/run",
+                headers={"X-API-Key": "valid_test_api_key_123"}
+            )
+            assert res.status_code == 200
+
+            # Verify audit log in database
+            db = TestingSessionLocal()
+            scan_log = db.query(AuditLog).filter(
+                AuditLog.action.like("%Security scan completed%")
+            ).order_by(AuditLog.id.desc()).first()
+
+            assert scan_log is not None
+            assert "[audit_verified_operator]" in scan_log.action
+            scan_details = json.loads(scan_log.details)
+            assert scan_details["actor"] == "audit_verified_operator"
+            assert scan_details["source"] == "platform_scan_runner"
+            assert scan_details["total_findings"] == 1
+
+            # Find created remediation
+            created_rem = db.query(Remediation).filter(
+                Remediation.title.like("%S3 Bucket Default Encryption Disabled%")
+            ).first()
+            assert created_rem is not None
+
+            # Reject remediation and verify structured audit log
+            res_reject = auth_client.put(
+                f"/platform/remediation/{created_rem.id}/reject",
+                headers={"X-API-Key": "valid_test_api_key_123"}
+            )
+            assert res_reject.status_code == 200
+
+            reject_log = db.query(AuditLog).filter(
+                AuditLog.action.like("%Remediation rejected%")
+            ).order_by(AuditLog.id.desc()).first()
+
+            assert reject_log is not None
+            assert "[audit_verified_operator]" in reject_log.action
+            reject_details = json.loads(reject_log.details)
+            assert reject_details["actor"] == "audit_verified_operator"
+            assert reject_details["source"] == "platform_remediation_reviewer"
+            db.close()
+    finally:
+        if original_override:
+            app.dependency_overrides[get_current_actor] = original_override
+
+
 
 

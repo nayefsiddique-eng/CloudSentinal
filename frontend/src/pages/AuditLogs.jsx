@@ -21,6 +21,23 @@ function AuditLogs() {
     return <h2>Loading audit logs...</h2>;
   }
 
+  const parseDetails = (rawDetails) => {
+    if (!rawDetails) return { text: "-", actor: null, source: null };
+    try {
+      const parsed = JSON.parse(rawDetails);
+      if (typeof parsed === "object" && parsed !== null) {
+        return {
+          text: parsed.user_details || parsed.details || JSON.stringify(parsed),
+          actor: parsed.actor || parsed.recorded_by || null,
+          source: parsed.source || null,
+        };
+      }
+    } catch {
+      // Plain text or legacy format
+    }
+    return { text: rawDetails, actor: null, source: null };
+  };
+
   return (
     <div className="page">
       <h1>Audit Logs</h1>
@@ -35,7 +52,7 @@ function AuditLogs() {
               <th>Action</th>
               <th>Resource Type</th>
               <th>Resource ID</th>
-              <th>Details</th>
+              <th>Details & Operator</th>
               <th>Time</th>
             </tr>
           </thead>
@@ -46,19 +63,38 @@ function AuditLogs() {
                 <td colSpan="5">No audit logs found.</td>
               </tr>
             ) : (
-              logs.map((log) => (
-                <tr key={log.id}>
-                  <td>{log.action}</td>
-                  <td>{log.resource_type || "-"}</td>
-                  <td>{log.resource_id || "-"}</td>
-                  <td>{log.details || "-"}</td>
-                  <td>
-                    {log.created_at
-                      ? new Date(log.created_at).toLocaleString()
-                      : "-"}
-                  </td>
-                </tr>
-              ))
+              logs.map((log) => {
+                const parsed = parseDetails(log.details);
+                return (
+                  <tr key={log.id}>
+                    <td>
+                      <strong>{log.action}</strong>
+                    </td>
+                    <td>{log.resource_type || "-"}</td>
+                    <td>{log.resource_id || "-"}</td>
+                    <td>
+                      <div>{parsed.text}</div>
+                      {parsed.actor && (
+                        <div style={{ marginTop: "4px" }}>
+                          <span className="badge badge-status-executed" style={{ fontSize: "10px", padding: "2px 6px" }}>
+                            👤 {parsed.actor}
+                          </span>
+                          {parsed.source && (
+                            <span style={{ fontSize: "11px", color: "#9ca3af", marginLeft: "6px" }}>
+                              via {parsed.source}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </td>
+                    <td>
+                      {log.created_at
+                        ? new Date(log.created_at).toLocaleString()
+                        : "-"}
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

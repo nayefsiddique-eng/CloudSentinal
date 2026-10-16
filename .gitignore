@@ -56,6 +56,9 @@ node_modules/
 frontend/dist/
 frontend/build/
 frontend/node_modules/
+frontend-sireen/dist/
+frontend-sireen/build/
+frontend-sireen/node_modules/
 .eslintcache
 dist/
 
